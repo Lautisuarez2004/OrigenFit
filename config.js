@@ -276,12 +276,9 @@ document.addEventListener('DOMContentLoaded',()=>{
   const whatsappLink=document.querySelector('.shop-header .icon-btn[aria-label="WhatsApp"]');
   if(!whatsappLink) return;
 
-  // El PNG original es pequeño y contiene negro/blanco dentro de la propia imagen.
-  // Se reemplaza en pantalla por un SVG vectorial limpio para que no se recorte ni pierda definición.
   whatsappLink.innerHTML=`
-    <svg class="whatsapp-vector" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-      <path d="M16 4.2a11.2 11.2 0 0 0-9.7 16.8L4.8 27.8l6.9-1.5A11.2 11.2 0 1 0 16 4.2Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M11.4 10.3c.5-.5 1.1-.5 1.5 0l1.35 2.05c.22.36.2.8-.08 1.1l-.9 1.02c.88 1.9 2.4 3.42 4.32 4.32l1.02-.92c.32-.28.76-.3 1.12-.07l2.02 1.32c.5.32.62.9.36 1.43-.48.98-1.65 1.8-2.92 1.8-5.05 0-9.15-4.1-9.15-9.15 0-1.2.5-2.2 1.36-2.9Z" fill="currentColor"/>
+    <svg class="whatsapp-vector" viewBox="0 0 16 16" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <path fill="currentColor" d="M13.601 2.326A7.854 7.854 0 0 0 8.002 0C3.58 0 0 3.582 0 8.003a7.95 7.95 0 0 0 1.078 4.004L0 16l4.102-1.055a7.93 7.93 0 0 0 3.9 1.02h.003c4.42 0 8.002-3.582 8.002-8.003a7.95 7.95 0 0 0-2.406-5.636zM8.005 14.66h-.002a6.63 6.63 0 0 1-3.379-.925l-.242-.145-2.435.626.65-2.375-.158-.245a6.64 6.64 0 0 1-1.026-3.557c0-3.673 2.987-6.66 6.659-6.66 1.778 0 3.447.692 4.703 1.948a6.61 6.61 0 0 1 1.95 4.708c-.002 3.673-2.99 6.66-6.72 6.66zm3.652-4.988c-.2-.1-1.183-.584-1.367-.65-.183-.067-.317-.1-.45.1-.133.2-.517.65-.633.784-.117.133-.233.15-.433.05-.2-.1-.844-.311-1.607-.992-.593-.529-.993-1.183-1.11-1.383-.116-.2-.012-.308.088-.408.09-.09.2-.233.3-.35.1-.116.133-.2.2-.333.067-.133.034-.25-.017-.35-.05-.1-.45-1.084-.616-1.484-.162-.39-.327-.337-.45-.343l-.383-.007c-.133 0-.35.05-.533.25-.183.2-.7.684-.7 1.667 0 .984.717 1.934.817 2.067.1.133 1.41 2.154 3.417 3.02.477.206.85.329 1.141.421.479.152.915.131 1.26.08.384-.057 1.183-.484 1.35-.95.167-.467.167-.867.117-.95-.05-.083-.183-.133-.383-.233z"/>
     </svg>`;
 
   const style=document.createElement('style');
@@ -291,11 +288,13 @@ document.addEventListener('DOMContentLoaded',()=>{
       color:#fff;
     }
     .shop-header .whatsapp-vector{
-      width:32px;
-      height:32px;
+      width:34px;
+      height:34px;
       display:block;
-      overflow:visible;
       flex:none;
+    }
+    @media(max-width:650px){
+      .shop-header .whatsapp-vector{width:31px;height:31px}
     }
   `;
   document.head.appendChild(style);
