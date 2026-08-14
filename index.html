@@ -1,0 +1,1524 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Origen Fit | Suplementos deportivos</title>
+<meta name="description" content="Origen Fit - suplementos deportivos en La Plata.">
+<style>
+:root{
+  --red:#e30613;
+  --red-dark:#b60009;
+  --black:#0d0d0e;
+  --white:#fff;
+  --soft:#f7f7f8;
+  --line:#e7e7e9;
+  --muted:#666971;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,Arial,Helvetica,sans-serif;
+  color:#111;
+  background:#fff;
+}
+a{text-decoration:none;color:inherit}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.c{width:min(1160px,calc(100% - 30px));margin:auto}
+
+/* TOP SHIPPING BAR */
+.shipping-bar{
+  background:var(--black);
+  color:#ffd23f;
+}
+.shipping-inner{
+  width:min(1160px,calc(100% - 20px));
+  min-height:48px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.shipping-viewport{
+  position:relative;
+  width:100%;
+  min-height:24px;
+}
+.shipping-msg{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  font-size:.92rem;
+  padding:8px 12px;
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .32s ease, transform .32s ease;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.shipping-msg.active{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* RED ECOMMERCE HEADER */
+.shop-header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:var(--red);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(0,0,0,.12);
+}
+.header-main{
+  min-height:82px;
+  display:grid;
+  grid-template-columns:54px 1fr 54px;
+  gap:14px;
+  align-items:center;
+}
+.icon-btn{
+  width:48px;
+  height:48px;
+  border:0;
+  background:transparent;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  font-size:1.9rem;
+}
+.icon-btn:hover{background:rgba(255,255,255,.12)}
+.hamburger{
+  width:30px;
+  height:22px;
+  position:relative;
+}
+.hamburger span{
+  position:absolute;
+  left:0;
+  width:100%;
+  height:3px;
+  border-radius:99px;
+  background:#fff;
+}
+.hamburger span:nth-child(1){top:0}
+.hamburger span:nth-child(2){top:9px}
+.hamburger span:nth-child(3){top:18px}
+.header-logo{
+  justify-self:center;
+  display:block;
+  width:min(285px,70vw);
+  max-height:54px;
+  object-fit:contain;
+}
+.whatsapp-mark{width:30px;height:30px;display:block;object-fit:contain;filter:drop-shadow(0 0 0 rgba(0,0,0,0));}
+.search-wrap{padding:0 0 22px}
+.search-box{
+  min-height:62px;
+  border-radius:10px;
+  background:#fff;
+  display:grid;
+  grid-template-columns:1fr 58px;
+  align-items:center;
+  overflow:hidden;
+  box-shadow:0 4px 14px rgba(0,0,0,.12);
+}
+.search-box input{
+  width:100%;
+  border:0;
+  outline:none;
+  padding:0 20px;
+  font-size:1.12rem;
+  color:#222;
+  min-width:0;
+}
+.search-box button{
+  height:62px;
+  border:0;
+  background:#fff;
+  display:grid;
+  place-items:center;
+  font-size:1.7rem;
+}
+
+/* CATEGORY DRAWER */
+.drawer-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.48);
+  z-index:70;
+  opacity:0;
+  visibility:hidden;
+  transition:.2s ease;
+}
+.drawer-backdrop.open{opacity:1;visibility:visible}
+.category-drawer{
+  position:fixed;
+  inset:0 auto 0 0;
+  width:min(360px,88vw);
+  background:#fff;
+  z-index:80;
+  transform:translateX(-102%);
+  transition:.25s ease;
+  box-shadow:16px 0 40px rgba(0,0,0,.2);
+  display:flex;
+  flex-direction:column;
+}
+.category-drawer.open{transform:translateX(0)}
+.drawer-head{
+  background:var(--red);
+  color:#fff;
+  padding:22px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.drawer-head strong{
+  font-size:1.35rem;
+  letter-spacing:-.02em;
+}
+.drawer-close{
+  width:42px;height:42px;
+  border:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  font-size:1.5rem;
+}
+.drawer-list{
+  padding:14px;
+  overflow:auto;
+}
+.drawer-category{
+  width:100%;
+  border:0;
+  border-bottom:1px solid var(--line);
+  background:#fff;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  text-align:left;
+  padding:14px 8px;
+  font-weight:800;
+}
+.drawer-category:hover{color:var(--red)}
+.drawer-thumb{
+  width:56px;height:56px;
+  border-radius:12px;
+  background:#fafafa;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  flex:none;
+}
+.drawer-thumb img{width:100%;height:100%;object-fit:contain}
+.drawer-letter{font-size:1.3rem;color:var(--red);font-weight:950}
+
+/* HERO */
+.hero{
+  position:relative;
+  overflow:hidden;
+  padding:58px 0 52px;
+  background:
+    radial-gradient(circle at 82% 12%, rgba(227,6,19,.42), transparent 18%),
+    radial-gradient(circle at 70% 38%, rgba(227,6,19,.35), transparent 22%),
+    radial-gradient(circle at 92% 55%, rgba(227,6,19,.28), transparent 20%),
+    radial-gradient(circle at 58% 64%, rgba(227,6,19,.22), transparent 20%),
+    linear-gradient(180deg,#fff 0%,#fff7f8 72%,#fff 100%);
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:44px;
+  align-items:center;
+}
+.kicker{
+  color:var(--red);
+  font-weight:900;
+  font-size:.8rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+h1{
+  font-size:clamp(3rem,7vw,5.8rem);
+  line-height:.9;
+  letter-spacing:-.07em;
+  margin:14px 0 18px;
+}
+.lead{
+  max-width:600px;
+  color:var(--muted);
+  font-size:1.05rem;
+}
+.hero-logo-wrap{
+  min-height:300px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hero-logo{
+  display:block;
+  width:min(365px,82%);
+  height:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 16px 24px rgba(0,0,0,.12));
+}
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:24px;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:999px;
+  padding:13px 20px;
+  font-weight:850;
+}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-dark)}
+.btn-light{background:#fff;border:1px solid var(--line)}
+.btn-dark{background:#111;color:#fff}
+
+/* PROMOS */
+.promos{padding:28px 0 24px;background:#fff}
+.promo-shell{position:relative;width:min(1000px,100%);margin:0 auto}
+.promo-track{position:relative;overflow:hidden;border-radius:28px}
+.promo-slide{
+  position:relative;
+  display:none;
+  border-radius:28px;
+  overflow:hidden;
+  background:#111;
+  box-shadow:0 16px 36px rgba(0,0,0,.12);
+}
+.promo-slide.active{display:block}
+.promo-slide > a{display:block;color:inherit}
+
+.promo-image{
+  position:relative;
+  width:100%;
+  height:auto;
+  background:transparent;
+  display:block;
+  overflow:hidden;
+  padding:0;
+}
+.promo-image img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-width:none;
+  max-height:none;
+  object-fit:initial;
+  object-position:center;
+}
+.promo-image.no-image{
+  min-height:230px;
+  background:linear-gradient(135deg,#161616,#050505);
+}
+
+.promo-overlay{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  padding:24px 28px;
+  display:flex;
+  align-items:flex-end;
+  pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.58) 0%,rgba(0,0,0,.20) 44%,rgba(0,0,0,0) 72%);
+}
+.promo-content{max-width:470px;color:#fff;pointer-events:auto}
+.badge{display:inline-block;background:var(--red);color:#fff;border-radius:999px;padding:8px 12px;font-size:.76rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.promo-title{font-size:clamp(1.9rem,4.2vw,3.2rem);line-height:.93;letter-spacing:-.05em;font-weight:950;margin:12px 0 7px}
+.promo-sub{font-size:1rem;color:#f0f0f0}
+
+.promo-sticker{
+  position:absolute;
+  top:14px;
+  right:-46px;
+  z-index:3;
+  background:var(--red);
+  color:#fff;
+  padding:10px 56px;
+  font-size:.76rem;
+  font-weight:950;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  transform:rotate(35deg);
+  box-shadow:0 10px 18px rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.18);
+}
+.promo-sticker:before,.promo-sticker:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-top:1px solid rgba(255,255,255,.18);
+  border-bottom:1px solid rgba(255,255,255,.18);
+  pointer-events:none;
+}
+.promo-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:46px;height:46px;border-radius:50%;
+  border:0;background:rgba(255,255,255,.94);color:#111;cursor:pointer;font-size:1.4rem;font-weight:900;z-index:4;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 10px 20px rgba(0,0,0,.12)
+}
+.promo-arrow.left{left:16px}.promo-arrow.right{right:16px}
+.promo-dots{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.promo-dot{width:10px;height:10px;border-radius:50%;background:#ddd;cursor:pointer;border:0}
+.promo-dot.active{background:var(--red)}
+
+
+/* CATEGORIES STRIP */
+.categories-section{
+  padding:38px 0 52px;
+  background:#fff;
+}
+.categories-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:20px;
+  margin-bottom:20px;
+}
+.categories-head h2{
+  margin:4px 0 0;
+  font-size:2rem;
+  letter-spacing:-.04em;
+}
+.categories-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+.category-card{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:20px;
+  padding:15px;
+  text-align:center;
+  transition:.18s ease;
+}
+.category-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px rgba(0,0,0,.08);
+}
+.category-card.active{
+  border-color:var(--red);
+  box-shadow:0 0 0 2px rgba(227,6,19,.1);
+}
+.category-art{
+  height:165px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background:#fff;
+  border-radius:14px;
+  margin-bottom:10px;
+  padding:10px;
+}
+.category-art img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.category-placeholder{
+  font-size:2.2rem;
+  color:var(--red);
+  font-weight:950;
+}
+.category-name{
+  font-weight:850;
+  font-size:1.04rem;
+}
+
+
+/* COMBOS */
+.combos-section{
+  padding:70px 0 78px;
+  background:#111;
+  color:#fff;
+}
+.combos-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:28px;
+}
+.combos-head .kicker{color:#ff4a54}
+.combos-head h2{
+  margin:7px 0 0;
+  color:#fff;
+  font-size:clamp(2.5rem,5vw,4rem);
+  line-height:.95;
+  letter-spacing:-.06em;
+}
+.combos-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+.combo-card{
+  display:block;
+  overflow:hidden;
+  border-radius:24px;
+  background:#fff;
+  color:#111;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 16px 36px rgba(0,0,0,.26);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.combo-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 22px 46px rgba(0,0,0,.34);
+}
+.combo-art{
+  height:300px;
+  padding:16px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  border-bottom:1px solid #eee;
+}
+.combo-art img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+}
+.combo-placeholder{
+  font-size:2.2rem;
+  font-weight:950;
+  color:var(--red);
+}
+.combo-body{padding:22px}
+.combo-price-row{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+}
+.combo-price-row h3{
+  margin:0;
+  font-size:1.45rem;
+  line-height:1.06;
+  letter-spacing:-.03em;
+}
+.combo-price{
+  color:var(--red);
+  font-size:1.28rem;
+  font-weight:950;
+  white-space:nowrap;
+}
+.combo-old-price{
+  display:block;
+  margin-top:3px;
+  color:#8b8d93;
+  font-size:.82rem;
+  font-weight:700;
+  text-decoration:line-through;
+}
+.combo-desc{
+  color:var(--muted);
+  line-height:1.45;
+  margin:12px 0 16px;
+}
+.combo-wa{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:var(--red);
+  font-size:.86rem;
+  font-weight:900;
+}
+.combo-empty{
+  grid-column:1/-1;
+  padding:24px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:16px;
+  color:#ccc;
+  text-align:center;
+}
+
+/* PRODUCTS */
+.products-section{
+  background:var(--red);
+  padding:76px 0 84px;
+}
+.section-head{margin-bottom:28px}
+.section-head .kicker{color:#ffd7db}
+.section-head h2{
+  margin:8px 0 0;
+  font-size:clamp(2.4rem,5vw,4rem);
+  line-height:.95;
+  letter-spacing:-.06em;
+  color:#fff;
+}
+.products{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+.card{
+  border:1px solid #f0f0f0;
+  border-radius:24px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 16px 36px rgba(0,0,0,.12);
+}
+.art{
+  height:290px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:16px;
+  background:#fff;
+  border-bottom:1px solid #f0f0f0;
+}
+.art img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+}
+.jar{
+  width:150px;height:180px;
+  border-radius:18px 18px 26px 26px;
+  background:#111;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  font-weight:900;
+}
+.jar span{
+  background:var(--red);
+  padding:16px 10px;
+  width:80%;
+  text-align:center;
+  border-radius:8px;
+}
+.body-card{
+  padding:22px;
+  background:#fff;
+}
+.feat{
+  display:inline-block;
+  margin-bottom:12px;
+  background:#ffe9eb;
+  color:var(--red);
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:.73rem;
+  font-weight:900;
+}
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.row h3{
+  margin:0;
+  font-size:1.45rem;
+  line-height:1.05;
+  letter-spacing:-.03em;
+}
+.price{
+  color:var(--red);
+  font-size:1.3rem;
+  font-weight:950;
+  white-space:nowrap;
+}
+.desc{
+  margin:12px 0 16px;
+  color:var(--muted);
+  line-height:1.45;
+}
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.tag{
+  display:inline-block;
+  border:1px solid var(--line);
+  background:#fafafa;
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:.73rem;
+  font-weight:800;
+}
+.msg{
+  padding:18px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.35);
+  color:#fff;
+  background:rgba(255,255,255,.12);
+}
+.err{
+  background:#fff1f2;
+  color:#9c2028;
+  border-color:#ffd0d4;
+}
+.no-results{
+  grid-column:1/-1;
+  padding:28px;
+  text-align:center;
+  background:#fff;
+  border-radius:18px;
+  color:#555;
+  font-weight:800;
+}
+
+
+.instagram-follow{padding:0 0 78px;background:#fff}
+.instagram-panel{
+  background:#f6f6f7;
+  border-radius:28px;
+  padding:34px 26px 36px;
+  display:grid;
+  grid-template-columns:minmax(280px,460px) 1fr;
+  align-items:center;
+  gap:32px;
+  box-shadow:0 16px 30px rgba(0,0,0,.06);
+}
+.instagram-card{
+  background:#fff;
+  border-radius:22px;
+  overflow:hidden;
+  border:1px solid #ececef;
+  box-shadow:0 12px 24px rgba(0,0,0,.08);
+}
+.instagram-card img{display:block;width:100%;height:auto}
+.instagram-copy h2{margin:0 0 10px;font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.05em;line-height:.96}
+.instagram-copy p{margin:0 0 18px;color:#50545d;font-size:1.08rem}
+.instagram-actions{display:flex;gap:12px;flex-wrap:wrap}
+.insta-round{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid #ececef;box-shadow:0 10px 18px rgba(0,0,0,.06)}
+.insta-round svg{width:30px;height:30px;stroke:#111;fill:none;stroke-width:2}
+.footer-band{background:#111;color:#fff;text-align:center;padding:18px 0}
+@media(max-width:900px){.instagram-panel{grid-template-columns:1fr}}
+@media(max-width:650px){.instagram-follow{padding:0 0 54px}.instagram-panel{padding:20px;border-radius:24px;gap:20px}.instagram-copy h2{font-size:2.2rem}.instagram-copy p{font-size:1rem}.insta-round{width:56px;height:56px}}
+
+
+.product-card-link{
+  display:block;
+  color:inherit;
+  cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.product-card-link:hover{
+  transform:translateY(-4px);
+  box-shadow:0 20px 42px rgba(0,0,0,.18);
+}
+.product-card-link:focus-visible{
+  outline:3px solid #fff;
+  outline-offset:4px;
+}
+.product-wa{
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:var(--red);
+  font-weight:900;
+  font-size:.86rem;
+}
+.pagination{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:34px;
+}
+.page-btn{
+  min-width:44px;
+  height:44px;
+  padding:0 13px;
+  border:1px solid rgba(255,255,255,.58);
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  border-radius:12px;
+  font-weight:900;
+  display:grid;
+  place-items:center;
+}
+.page-btn:hover{
+  background:#fff;
+  color:var(--red);
+}
+.page-btn.active{
+  background:#fff;
+  color:var(--red);
+  border-color:#fff;
+}
+.page-btn:disabled{
+  opacity:.38;
+  cursor:not-allowed;
+}
+.page-ellipsis{
+  color:#fff;
+  font-weight:900;
+  padding:0 3px;
+}
+.results-meta{
+  color:#ffe6e8;
+  text-align:center;
+  margin-top:14px;
+  font-size:.84rem;
+  font-weight:700;
+}
+
+/* FOOTER / CTA */
+.cta-wrap{padding:76px 0}
+.cta{
+  background:#111;
+  color:#fff;
+  border-radius:28px;
+  padding:36px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+.cta h2{
+  margin:0 0 8px;
+  font-size:clamp(2rem,4vw,3rem);
+  letter-spacing:-.05em;
+}
+.cta p{margin:0;color:#ddd}
+footer{
+  background:#111;
+  color:#fff;
+  padding:22px 0;
+}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .products{grid-template-columns:1fr 1fr}
+  .combos-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:650px){
+  .shipping-inner{min-height:44px}
+  .shipping-msg{font-size:.8rem;white-space:normal;line-height:1.2;padding:10px 8px}
+  .shop-header{position:relative}
+  .header-main{min-height:72px}
+  .header-logo{width:min(220px,66vw);max-height:45px}
+  .search-wrap{padding-bottom:16px}
+  .search-box{min-height:56px}
+  .search-box button{height:56px}
+  .hero{padding:40px 0 36px}
+  .hero-logo-wrap{min-height:220px}
+  .hero-logo{width:min(300px,80%)}
+  .promo-image{height:auto;padding:0}
+  .promo-overlay{padding:16px}
+  .promo-title{font-size:1.55rem}
+  .promo-sub{font-size:.92rem}
+  .promo-sticker{top:10px;right:-48px;padding:8px 52px;font-size:.7rem}
+  .categories-grid{
+    display:flex;
+    overflow-x:auto;
+    gap:14px;
+    padding-bottom:8px;
+    scroll-snap-type:x proximity;
+  }
+  .category-card{
+    min-width:185px;
+    scroll-snap-align:start;
+  }
+  .category-art{height:145px}
+  .products{grid-template-columns:1fr}
+  .combos-grid{grid-template-columns:1fr}
+  .cta{flex-direction:column;align-items:flex-start}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.102.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+</head>
+<body>
+<div class="shipping-bar"><div class="shipping-inner"><div id="shippingViewport" class="shipping-viewport"></div></div></div>
+
+<header class="shop-header">
+  <div class="c header-main">
+    <button class="icon-btn" id="menuBtn" aria-label="Abrir categorías">
+      <span class="hamburger"><span></span><span></span><span></span></span>
+    </button>
+
+    <img class="header-logo" src="logo-principal.png" alt="Origen Fit">
+
+    <a class="icon-btn" href="https://wa.me/542216187020" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <img class="whatsapp-mark" src="whatsapp-white.png" alt="WhatsApp">
+    </a>
+  </div>
+
+  <div class="c search-wrap">
+    <div class="search-box">
+      <input id="productSearch" type="search" placeholder="¿Qué estás buscando?" autocomplete="off">
+      <button id="searchBtn" aria-label="Buscar">⌕</button>
+    </div>
+  </div>
+</header>
+
+<div id="drawerBackdrop" class="drawer-backdrop"></div>
+<aside id="categoryDrawer" class="category-drawer">
+  <div class="drawer-head">
+    <strong>Categorías</strong>
+    <button id="drawerClose" class="drawer-close" aria-label="Cerrar">×</button>
+  </div>
+  <div id="drawerCategories" class="drawer-list"></div>
+</aside>
+
+<header class="hero">
+  <div class="c hero-grid">
+    <div>
+      <div class="kicker">Suplementos deportivos · La Plata</div>
+      <h1>ENERGÍA.<br>FUERZA.<br>ENFOQUE.</h1>
+      <p class="lead">Catálogo actualizado directamente por Origen Fit. Precios claros, stock visible y compra directa por WhatsApp.</p>
+      <div class="actions">
+        <a class="btn red" href="#productos">Ver productos</a>
+        <a class="btn light" href="https://instagram.com/origenfit.lp" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+    <div class="hero-logo-wrap">
+      <img class="hero-logo" src="logo-principal.png" alt="Origen Fit">
+    </div>
+  </div>
+</header>
+
+<section class="promos" id="promos">
+  <div class="c promo-shell">
+    <div id="promoLoading" class="msg" style="display:none">Cargando promociones…</div>
+    <div id="promoError" class="msg err hidden"></div>
+    <div id="promoRoot" class="hidden">
+      <div class="promo-track" id="promoTrack"></div>
+      <button class="promo-arrow left" id="promoPrev" aria-label="Anterior">‹</button>
+      <button class="promo-arrow right" id="promoNext" aria-label="Siguiente">›</button>
+      <div class="promo-dots" id="promoDots"></div>
+    </div>
+  </div>
+</section>
+
+
+<section class="categories-section" id="categorias">
+  <div class="c">
+    <div class="categories-head">
+      <div>
+        <div class="kicker">Explorá</div>
+        <h2>Categorías</h2>
+      </div>
+    </div>
+    <div id="categoriesLoading" class="muted">Cargando categorías…</div>
+    <div id="categoriesGrid" class="categories-grid hidden"></div>
+  </div>
+</section>
+
+<section id="combos" class="combos-section hidden">
+  <div class="c">
+    <div class="combos-head">
+      <div>
+        <div class="kicker">Más por menos</div>
+        <h2>COMBOS.</h2>
+      </div>
+    </div>
+    <div id="comboLoading" class="msg">Cargando combos…</div>
+    <div id="comboError" class="msg err hidden"></div>
+    <div id="comboGrid" class="combos-grid hidden"></div>
+  </div>
+</section>
+
+<section id="productos" class="products-section">
+  <div class="c">
+    <div class="section-head">
+      <div>
+        <div class="kicker">Catálogo</div>
+        <h2>PRODUCTOS.</h2>
+      </div>
+    </div>
+    <div id="loading" class="msg">Cargando productos…</div>
+    <div id="error" class="msg err hidden"></div>
+    <div id="grid" class="products hidden"></div>
+    <div id="pagination" class="pagination hidden"></div>
+    <div id="resultsMeta" class="results-meta hidden"></div>
+  </div>
+</section>
+
+<section class="cta-wrap">
+  <div class="c">
+    <div class="cta">
+      <div>
+        <h2>¿Querés hacer tu pedido?</h2>
+        <p>Consultá stock, promos y entrega por WhatsApp.</p>
+      </div>
+      <a class="btn red" href="https://wa.me/542216187020" target="_blank" rel="noopener">Hablar por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<section class="instagram-follow">
+  <div class="c">
+    <div class="instagram-panel">
+      <div class="instagram-card">
+        <img src="instagram-card.jpg" alt="Instagram de Origen Fit">
+      </div>
+      <div class="instagram-copy">
+        <div class="kicker">Instagram</div>
+        <h2>¿Ya nos seguís en Instagram?</h2>
+        <p>Subimos promos todos los días, mostramos stock real y te dejamos novedades para que tengas todo a mano.</p>
+        <div class="instagram-actions">
+          <a class="btn btn-red" href="https://instagram.com/origenfit.lp" target="_blank" rel="noopener">Seguir @origenfit.lp</a>
+          <a class="insta-round" href="https://instagram.com/origenfit.lp" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5"></rect><circle cx="12" cy="12" r="4.1"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="c">Origen Fit · @origenfit.lp · +54 221 618 7020</div>
+</footer>
+
+<script>
+const db=supabase.createClient(ORIGENFIT_CONFIG.supabaseUrl,ORIGENFIT_CONFIG.supabaseKey);
+const money=n=>n==null?'Consultar':'$'+Number(n).toLocaleString('es-AR');
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function renderTopMessages(){
+  const viewport = document.getElementById('shippingViewport');
+  if(!viewport) return;
+  const items = topMessages.length ? topMessages : [{text:'Envíos gratis en La Plata',text_color:'#ffd23f'}];
+  viewport.innerHTML = items.map((m,i)=>`<span class="shipping-msg ${i===topMessageIndex?'active':''}" style="color:${esc(m.text_color||'#ffd23f')}">${esc(m.text||'')}</span>`).join('');
+}
+function goTopMessage(i){
+  const total = (topMessages.length || 1);
+  topMessageIndex = (i + total) % total;
+  renderTopMessages();
+  resetTopMessageTimer();
+}
+function resetTopMessageTimer(){
+  clearInterval(topMessageTimer);
+  if(topMessages.length>1){
+    topMessageTimer = setInterval(()=>goTopMessage(topMessageIndex+1), 3500);
+  }
+}
+async function loadTopMessages(){
+  try{
+    const {data,error}=await db.from('top_messages').select('*').eq('active',true).order('sort_order').order('created_at');
+    if(error) throw error;
+    topMessages = data || [];
+  }catch(err){
+    console.warn('Avisos superiores:', err?.message || err);
+    topMessages = [{text:'Envíos gratis en La Plata',text_color:'#ffd23f'}];
+  }
+  renderTopMessages();
+  resetTopMessageTimer();
+}
+
+const WHATSAPP_NUMBER='542216187020';
+const PRODUCTS_PER_PAGE=6;
+
+let currentPage=1;
+let totalProducts=0;
+let totalPages=1;
+let activeCategory='';
+let activeSearch='';
+let searchTimer=null;
+
+function productWhatsappUrl(p, finalPrice){
+  const priceText=finalPrice!=null ? ` (${money(finalPrice)})` : '';
+  const stockText=p.stock>0 ? '' : ' Figura sin stock en la web; quería consultar disponibilidad.';
+  const message=`Hola! Quiero consultar por ${p.name}${priceText}.${stockText} ¿Hay stock disponible?`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+function syncCategorySelection(){
+  document.querySelectorAll('.category-card').forEach(card=>{
+    card.classList.toggle('active',(card.dataset.category||'')===activeCategory);
+  });
+}
+
+function paginationItems(page,total){
+  if(total<=7) return Array.from({length:total},(_,i)=>i+1);
+
+  const items=[1];
+  const start=Math.max(2,page-2);
+  const end=Math.min(total-1,page+2);
+
+  if(start>2) items.push('...');
+  for(let i=start;i<=end;i++) items.push(i);
+  if(end<total-1) items.push('...');
+  items.push(total);
+  return items;
+}
+
+function renderPagination(){
+  const box=document.getElementById('pagination');
+  const meta=document.getElementById('resultsMeta');
+  box.innerHTML='';
+
+  if(totalProducts===0){
+    box.classList.add('hidden');
+    meta.classList.add('hidden');
+    return;
+  }
+
+  if(totalPages>1){
+    const prev=document.createElement('button');
+    prev.className='page-btn';
+    prev.textContent='‹';
+    prev.disabled=currentPage<=1;
+    prev.setAttribute('aria-label','Página anterior');
+    prev.onclick=()=>goToProductPage(currentPage-1);
+    box.appendChild(prev);
+
+    paginationItems(currentPage,totalPages).forEach(item=>{
+      if(item==='...'){
+        const span=document.createElement('span');
+        span.className='page-ellipsis';
+        span.textContent='…';
+        box.appendChild(span);
+        return;
+      }
+      const b=document.createElement('button');
+      b.className='page-btn'+(item===currentPage?' active':'');
+      b.textContent=String(item);
+      b.setAttribute('aria-label',`Página ${item}`);
+      if(item===currentPage)b.setAttribute('aria-current','page');
+      b.onclick=()=>goToProductPage(item);
+      box.appendChild(b);
+    });
+
+    const next=document.createElement('button');
+    next.className='page-btn';
+    next.textContent='›';
+    next.disabled=currentPage>=totalPages;
+    next.setAttribute('aria-label','Página siguiente');
+    next.onclick=()=>goToProductPage(currentPage+1);
+    box.appendChild(next);
+
+    box.classList.remove('hidden');
+  }else{
+    box.classList.add('hidden');
+  }
+
+  const first=(currentPage-1)*PRODUCTS_PER_PAGE+1;
+  const last=Math.min(currentPage*PRODUCTS_PER_PAGE,totalProducts);
+  meta.textContent=`Mostrando ${first}–${last} de ${totalProducts} productos`;
+  meta.classList.remove('hidden');
+}
+
+async function goToProductPage(page){
+  if(page<1 || page>totalPages || page===currentPage)return;
+  currentPage=page;
+  await loadProducts();
+  document.getElementById('productos').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function withTimeout(thenable,ms=12000){
+  return Promise.race([
+    Promise.resolve(thenable),
+    new Promise((_,reject)=>setTimeout(
+      ()=>reject(new Error('La conexión con el catálogo tardó demasiado. Refrescá la página e intentá nuevamente.')),
+      ms
+    ))
+  ]);
+}
+
+async function loadProducts(){
+  const loading=document.getElementById('loading');
+  const errorBox=document.getElementById('error');
+  const grid=document.getElementById('grid');
+  const pagination=document.getElementById('pagination');
+  const resultsMeta=document.getElementById('resultsMeta');
+
+  loading.textContent='Cargando productos…';
+  loading.classList.remove('hidden');
+  errorBox.classList.add('hidden');
+
+  try{
+    const {data,error}=await withTimeout(
+      db.rpc('get_products_page',{
+        p_page: currentPage,
+        p_page_size: PRODUCTS_PER_PAGE,
+        p_category: activeCategory || null,
+        p_search: activeSearch || null
+      })
+    );
+
+    if(error) throw error;
+
+    const payload=(data && typeof data==='object') ? data : {};
+    totalProducts=Number(payload.total_count||0);
+    totalPages=Math.max(1,Math.ceil(totalProducts/PRODUCTS_PER_PAGE));
+    const items=Array.isArray(payload.items) ? payload.items : [];
+
+    // Si se borraron productos mientras estábamos en una página alta,
+    // volvemos a la última página válida y consultamos una sola vez más.
+    if(totalProducts>0 && currentPage>totalPages){
+      currentPage=totalPages;
+      return await loadProducts();
+    }
+
+    grid.innerHTML='';
+
+    if(!items.length){
+      grid.innerHTML='<div class="no-results">No encontramos productos con esos filtros.</div>';
+      grid.classList.remove('hidden');
+      renderPagination();
+      syncCategorySelection();
+      return;
+    }
+
+    items.forEach(p=>{
+      const promo=p.promo_price!=null&&Number(p.promo_price)>0&&(p.price==null||Number(p.promo_price)<Number(p.price));
+      const finalPrice=promo?p.promo_price:p.price;
+      const waUrl=productWhatsappUrl(p,finalPrice);
+      const art=p.image_url
+        ?`<img src="${esc(p.image_url)}" alt="${esc(p.name)}">`
+        :`<div class="jar"><span>${esc((p.brand||'Origen Fit').toUpperCase())}<br>${esc((p.category||'Suplemento').toUpperCase())}</span></div>`;
+
+      grid.insertAdjacentHTML('beforeend',`
+        <a class="card product-card-link" href="${esc(waUrl)}" target="_blank" rel="noopener" aria-label="Consultar ${esc(p.name)} por WhatsApp">
+          <div class="art">${art}</div>
+          <div class="body-card">
+            ${p.featured?'<span class="feat">Más vendido</span>':''}
+            <div class="row">
+              <h3>${esc(p.name)}</h3>
+              <div class="price">${money(finalPrice)}</div>
+            </div>
+            <p class="desc">${esc(p.description||'')}</p>
+            <div class="tags">
+              ${p.brand?`<span class="tag">${esc(p.brand)}</span>`:''}
+              <span class="tag">${p.stock>0?'Stock: '+p.stock:'Sin stock'}</span>
+            </div>
+            <div class="product-wa">
+              <span>Consultar por WhatsApp</span>
+              <span>→</span>
+            </div>
+          </div>
+        </a>
+      `);
+    });
+
+    grid.classList.remove('hidden');
+    renderPagination();
+    syncCategorySelection();
+
+  }catch(err){
+    console.error('Error cargando productos:',err);
+
+    grid.innerHTML='';
+    grid.classList.add('hidden');
+    pagination.classList.add('hidden');
+    resultsMeta.classList.add('hidden');
+
+    const message=err?.message || String(err);
+    errorBox.innerHTML=
+      'No se pudo cargar el catálogo. <b>'+esc(message)+'</b>'+
+      '<br><button id="retryProducts" class="btn btn-light" style="margin-top:12px">Reintentar</button>';
+    errorBox.classList.remove('hidden');
+
+    setTimeout(()=>{
+      const retry=document.getElementById('retryProducts');
+      if(retry) retry.onclick=()=>loadProducts();
+    },0);
+
+  }finally{
+    loading.classList.add('hidden');
+  }
+}
+
+
+function comboWhatsappUrl(c,finalPrice){
+  const priceText=finalPrice!=null?` (${money(finalPrice)})`:'';
+  const stockText=c.stock>0?'':' Quería consultar disponibilidad.';
+  const message=`Hola! Quiero consultar por el combo ${c.name}${priceText}.${stockText}`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+async function loadCombos(){
+  const section=document.getElementById('combos');
+  const loading=document.getElementById('comboLoading');
+  const errorBox=document.getElementById('comboError');
+  const grid=document.getElementById('comboGrid');
+
+  try{
+    const {data,error}=await db
+      .from('combos')
+      .select('*')
+      .eq('visible',true)
+      .order('sort_order')
+      .order('created_at');
+
+    if(error) throw error;
+
+    const items=data||[];
+
+    if(!items.length){
+      section.classList.add('hidden');
+      return;
+    }
+
+    section.classList.remove('hidden');
+    loading.classList.add('hidden');
+    grid.innerHTML='';
+
+    items.forEach(c=>{
+      const hasPromo=c.promo_price!=null&&Number(c.promo_price)>0&&(c.price==null||Number(c.promo_price)<Number(c.price));
+      const finalPrice=hasPromo?c.promo_price:c.price;
+      const wa=comboWhatsappUrl(c,finalPrice);
+      const art=c.image_url
+        ?`<img src="${esc(c.image_url)}" alt="${esc(c.name)}">`
+        :`<div class="combo-placeholder">COMBO</div>`;
+
+      grid.insertAdjacentHTML('beforeend',`
+        <a class="combo-card" href="${esc(wa)}" target="_blank" rel="noopener" aria-label="Consultar combo ${esc(c.name)} por WhatsApp">
+          <div class="combo-art">${art}</div>
+          <div class="combo-body">
+            <div class="combo-price-row">
+              <h3>${esc(c.name)}</h3>
+              <div>
+                <div class="combo-price">${money(finalPrice)}</div>
+                ${hasPromo&&c.price!=null?`<span class="combo-old-price">${money(c.price)}</span>`:''}
+              </div>
+            </div>
+            <p class="combo-desc">${esc(c.description||'')}</p>
+            <div class="tags">
+              <span class="tag">${c.stock>0?'Stock: '+c.stock:'Sin stock'}</span>
+            </div>
+            <div class="combo-wa"><span>Consultar combo por WhatsApp</span><span>→</span></div>
+          </div>
+        </a>
+      `);
+    });
+
+    grid.classList.remove('hidden');
+
+  }catch(err){
+    console.warn('Combos:',err?.message||err);
+    loading.classList.add('hidden');
+    errorBox.textContent='No se pudieron cargar los combos: '+(err?.message||String(err));
+    errorBox.classList.remove('hidden');
+    section.classList.remove('hidden');
+  }
+}
+
+let promos = [];
+let promoIndex = 0;
+let promoTimer = null;
+let topMessages = [];
+let topMessageIndex = 0;
+let topMessageTimer = null;
+
+function renderPromos(){
+  const root = document.getElementById('promoRoot');
+  const track = document.getElementById('promoTrack');
+  const dots = document.getElementById('promoDots');
+  const prev = document.getElementById('promoPrev');
+  const next = document.getElementById('promoNext');
+
+  if(!promos.length){
+    root.classList.add('hidden');
+    prev.style.display='none';
+    next.style.display='none';
+    return;
+  }
+
+  track.innerHTML='';
+  dots.innerHTML='';
+
+  promos.forEach((p,i)=>{
+    track.insertAdjacentHTML('beforeend', `
+      <div class="promo-slide ${i===promoIndex?'active':''}">
+        ${p.link_url?`<a href="${esc(p.link_url)}" target="_blank" rel="noopener" aria-label="${esc(p.title||'Promoción')}">`:''}
+        ${p.sticker_text?`<div class="promo-sticker">${esc(p.sticker_text)}</div>`:''}
+        <div class="promo-image ${p.image_url?'':'no-image'}">
+          ${p.image_url?`<img src="${esc(p.image_url)}" alt="${esc(p.title||'Promoción')}">`:''}
+        </div>
+        <div class="promo-overlay">
+          <div class="promo-content">
+            ${p.badge?`<span class="badge">${esc(p.badge)}</span>`:''}
+            <div class="promo-title">${esc(p.title || 'Promoción')}</div>
+            ${p.subtitle?`<div class="promo-sub">${esc(p.subtitle)}</div>`:''}
+            ${p.link_url?`<div style="margin-top:14px"><span class="btn btn-red">Ver promoción</span></div>`:''}
+          </div>
+        </div>
+        ${p.link_url?`</a>`:''}
+      </div>
+    `);
+    dots.insertAdjacentHTML('beforeend', `<button class="promo-dot ${i===promoIndex?'active':''}" data-i="${i}" aria-label="Ir a promo ${i+1}"></button>`);
+  });
+
+  [...dots.querySelectorAll('.promo-dot')].forEach(b=>b.onclick=()=>goPromo(Number(b.dataset.i)));
+  prev.style.display = promos.length>1 ? 'flex' : 'none';
+  next.style.display = promos.length>1 ? 'flex' : 'none';
+  root.classList.remove('hidden');
+}
+
+function goPromo(i){
+  promoIndex = (i + promos.length) % promos.length;
+  renderPromos();
+  resetPromoTimer();
+}
+function resetPromoTimer(){
+  clearInterval(promoTimer);
+  if(promos.length>1){
+    promoTimer = setInterval(()=>goPromo(promoIndex+1), 5000);
+  }
+}
+
+async function loadPromos(){
+  const {data,error}=await db.from('promotions').select('*').eq('active',true).order('sort_order').order('created_at');
+  if(error){
+    const e=document.getElementById('promoError');
+    e.textContent='No se pudieron cargar las promociones: '+error.message;
+    e.classList.remove('hidden');
+    return;
+  }
+  promos = data || [];
+  renderPromos();
+  resetPromoTimer();
+}
+
+async function loadCategories(){
+  const {data,error}=await db.from('categories').select('*').eq('visible',true).order('sort_order').order('created_at');
+  document.getElementById('categoriesLoading').classList.add('hidden');
+  if(error){
+    console.warn('Categorías:', error.message);
+    return;
+  }
+  const grid=document.getElementById('categoriesGrid');
+  grid.innerHTML=`<button class="category-card category-all active" data-category="">
+    <div class="category-art"><div class="category-placeholder">TODOS</div></div>
+    <div class="category-name">Todos</div>
+  </button>`;
+  (data||[]).forEach(c=>{
+    grid.insertAdjacentHTML('beforeend',`
+      <button class="category-card" data-category="${esc(c.name)}">
+        <div class="category-art">
+          ${c.image_url?`<img src="${esc(c.image_url)}" alt="${esc(c.name)}">`:`<div class="category-placeholder">${esc((c.name||'?').slice(0,1).toUpperCase())}</div>`}
+        </div>
+        <div class="category-name">${esc(c.name)}</div>
+      </button>
+    `);
+  });
+  grid.querySelectorAll('.category-card').forEach(card=>{
+    card.onclick=async()=>{
+      activeCategory=card.dataset.category||'';
+      currentPage=1;
+      syncCategorySelection();
+      await loadProducts();
+      document.getElementById('productos').scrollIntoView({behavior:'smooth',block:'start'});
+    };
+  });
+
+  const drawer=document.getElementById('drawerCategories');
+  drawer.innerHTML=`<button class="drawer-category" data-category="">
+    <span class="drawer-thumb"><span class="drawer-letter">T</span></span>
+    <span>Todos los productos</span>
+  </button>`;
+
+  (data||[]).forEach(c=>{
+    drawer.insertAdjacentHTML('beforeend',`
+      <button class="drawer-category" data-category="${esc(c.name)}">
+        <span class="drawer-thumb">
+          ${c.image_url?`<img src="${esc(c.image_url)}" alt="${esc(c.name)}">`:`<span class="drawer-letter">${esc((c.name||'?').slice(0,1).toUpperCase())}</span>`}
+        </span>
+        <span>${esc(c.name)}</span>
+      </button>
+    `);
+  });
+
+  drawer.querySelectorAll('.drawer-category').forEach(btn=>{
+    btn.onclick=async()=>{
+      activeCategory=btn.dataset.category||'';
+      currentPage=1;
+      closeDrawer();
+      await loadProducts();
+      document.getElementById('productos').scrollIntoView({behavior:'smooth',block:'start'});
+    };
+  });
+
+  grid.classList.remove('hidden');
+}
+
+function openDrawer(){
+  document.getElementById('categoryDrawer').classList.add('open');
+  document.getElementById('drawerBackdrop').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  document.getElementById('categoryDrawer').classList.remove('open');
+  document.getElementById('drawerBackdrop').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+document.getElementById('menuBtn').onclick=openDrawer;
+document.getElementById('drawerClose').onclick=closeDrawer;
+document.getElementById('drawerBackdrop').onclick=closeDrawer;
+
+const searchInput=document.getElementById('productSearch');
+
+async function runSearch(scroll=true){
+  activeSearch=searchInput.value.trim();
+  currentPage=1;
+  await loadProducts();
+  if(scroll)document.getElementById('productos').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+searchInput.addEventListener('input',()=>{
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(()=>runSearch(false),350);
+});
+searchInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    e.preventDefault();
+    clearTimeout(searchTimer);
+    runSearch(true);
+  }
+});
+document.getElementById('searchBtn').onclick=()=>{
+  clearTimeout(searchTimer);
+  runSearch(true);
+};
+
+document.getElementById('promoPrev').onclick=()=>goPromo(promoIndex-1);
+document.getElementById('promoNext').onclick=()=>goPromo(promoIndex+1);
+
+loadTopMessages();
+loadProducts();
+loadPromos();
+loadCategories();
+loadCombos();
+</script>
+</body>
+</html>

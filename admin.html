@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Origen Fit | Administración</title>
+<style>
+:root{--r:#e30613;--rd:#b40009;--m:#686970;--l:#e7e7e9;--s:#f7f7f8}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:#111;background:#f5f5f6}a{text-decoration:none;color:inherit}
+button,input,textarea{font:inherit}.hidden{display:none!important}.muted{color:var(--m)}
+.btn{border:0;border-radius:999px;padding:13px 20px;font-weight:800;cursor:pointer}.red{background:var(--r);color:#fff}.red:hover{background:var(--rd)}.light{background:#fff;border:1px solid var(--l)}.danger{background:#fff;color:#a31620;border:1px solid #efb8bc}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.loginbox{width:min(440px,100%);background:#fff;border:1px solid var(--l);border-radius:22px;padding:28px}
+.loginbox .logo{display:block;margin:0 auto 18px;width:180px;height:auto}.field{margin:12px 0}.field label{display:block;font-weight:800;font-size:.85rem;margin-bottom:6px}.field input,.field textarea{width:100%;padding:11px;border:1px solid #d8d8dc;border-radius:10px}
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}.side{background:#111;color:#fff;padding:22px 14px}.side .logo{width:150px;height:auto;display:block;margin:0 auto 24px}
+.sidebtn{display:block;width:100%;border:0;background:transparent;color:#ddd;padding:11px;border-radius:9px;text-align:left;margin:3px 0}.sidebtn.active{background:var(--r);color:#fff}.sidebtn:hover{background:#252525}
+.main{padding:28px}.top{display:flex;justify-content:space-between;align-items:center;gap:20px}.panel{background:#fff;border:1px solid var(--l);border-radius:18px;padding:20px}
+.ag{display:grid;grid-template-columns:330px 1fr;gap:18px;margin-top:20px}.item{display:block;width:100%;text-align:left;border:1px solid var(--l);background:#fff;border-radius:11px;padding:11px;margin:7px 0}.item.active{border-color:var(--r);background:#fff5f5}.item small{display:block;color:var(--m)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.checks{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0}.checks label{display:flex;align-items:center;gap:7px}.ok{color:#168342;font-weight:800}
+.imagebox{border:1px dashed #cfcfd4;border-radius:14px;padding:14px;background:#fafafa;margin:14px 0}.imagepreview{width:100%;height:260px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--l);border-radius:12px;background:#fff;margin-top:10px;padding:12px}.imagepreview img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain}
+.formerr{color:#a31620}.msg{padding:18px;border:1px solid var(--l);border-radius:14px;color:var(--m)}.err{background:#fff2f3;color:#9b2028;border-color:#ffc8cb}.toolbar{display:flex;gap:8px;flex-wrap:wrap}
+.security-note{padding:13px;border-radius:12px;background:#fff8e8;color:#76520d;font-size:.86rem;margin-bottom:18px}
+@media(max-width:850px){.ag{grid-template-columns:1fr}.shell{grid-template-columns:1fr}.side{display:flex;gap:6px;overflow:auto}.side .logo{width:90px;margin:0 10px 0 0}}
+@media(max-width:580px){.two{grid-template-columns:1fr}.main{padding:16px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.102.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+</head>
+<body>
+
+<div id="login" class="login">
+  <div class="loginbox">
+    <img class="logo" src="logo-principal.png" alt="Origen Fit">
+    <h2>Panel del dueño</h2>
+    <form id="loginForm" autocomplete="off">
+      <div class="field"><label>Email</label><input id="email" type="email" autocomplete="off" required></div>
+      <div class="field"><label>Contraseña</label><input id="pass" type="password" autocomplete="off" required></div>
+      <button class="btn red" style="width:100%" type="submit">Iniciar sesión</button>
+    </form>
+    <p id="loginErr" class="formerr"></p>
+  </div>
+</div>
+
+<div id="app" class="shell hidden">
+  <aside class="side">
+    <img class="logo" src="logo-principal.png" alt="Origen Fit">
+    <button class="sidebtn active" data-panel="products">Productos</button>
+    <button class="sidebtn" data-panel="combos">Combos</button>
+    <button class="sidebtn" data-panel="categories">Categorías</button>
+    <button class="sidebtn" data-panel="promotions">Promociones</button>
+    <button class="sidebtn" data-panel="security">Seguridad</button>
+    <a class="sidebtn" href="index.html" target="_blank">Ver tienda ↗</a>
+    <button id="logout" class="sidebtn">Cerrar sesión</button>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <div>
+        <div style="color:var(--r);font-weight:900;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase">Administración</div>
+        <h2 id="pageTitle" style="margin:4px 0">Catálogo</h2>
+        <div id="who" class="muted"></div>
+      </div>
+      <button id="newAction" class="btn red">+ Nuevo producto</button>
+    </div>
+
+    <div id="adminErr" class="msg err hidden" style="margin-top:16px"></div>
+
+    <section id="productsPanel">
+      <div class="ag">
+        <div class="panel">
+          <h3>Productos</h3>
+          <p class="muted">Seleccioná un producto o creá uno nuevo.</p>
+          <div id="productList"></div>
+        </div>
+
+        <div class="panel" id="productFormPanel">
+          <h3 id="productTitle">Nuevo producto</h3>
+          <input id="productId" type="hidden">
+          <div class="two"><div class="field"><label>Nombre</label><input id="pName"></div><div class="field"><label>Marca</label><input id="pBrand"></div></div>
+          <div class="two"><div class="field"><label>Categoría</label><input id="pCat" list="categoryOptions"><datalist id="categoryOptions"></datalist></div><div class="field"><label>Orden</label><input id="pOrd" type="number" value="1"></div></div>
+          <div class="two"><div class="field"><label>Precio</label><input id="pPrice" type="number" min="0" step="0.01"></div><div class="field"><label>Precio promo</label><input id="pPromo" type="number" min="0" step="0.01"></div></div>
+          <div class="field"><label>Stock</label><input id="pStock" type="number" min="0" value="0"></div>
+          <div class="field"><label>Descripción</label><textarea id="pDesc" rows="4"></textarea></div>
+          <div class="imagebox">
+            <strong>Foto del producto</strong>
+            <div class="field"><input id="pImageFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
+            <div class="muted" style="font-size:.82rem">La imagen se sube a Supabase Storage y se mantiene la proporción original.</div>
+            <div id="pImagePreview" class="imagepreview"><span class="muted">Sin imagen seleccionada</span></div>
+            <div style="margin-top:10px"><button id="pRemoveImage" type="button" class="btn light">Quitar foto</button></div>
+          </div>
+          <div class="checks"><label><input id="pFeatured" type="checkbox"> Más vendido</label><label><input id="pVisible" type="checkbox" checked> Visible</label></div>
+          <div class="toolbar">
+            <button id="pSave" class="btn red">Guardar producto</button>
+            <button id="pDelete" class="btn danger hidden">Eliminar</button>
+            <button id="pClear" class="btn light">Limpiar</button>
+          </div>
+          <p id="pOk" class="ok"></p><p id="pErr" class="formerr"></p>
+        </div>
+      </div>
+    </section>
+
+    
+    
+    <section id="combosPanel" class="hidden">
+      <div class="ag">
+        <div class="panel">
+          <h3>Combos</h3>
+          <p class="muted">Creá paquetes de productos para mostrar en la sección COMBOS de la tienda.</p>
+          <div id="comboList"></div>
+        </div>
+
+        <div class="panel" id="comboFormPanel">
+          <h3 id="comboTitle">Nuevo combo</h3>
+          <input id="comboId" type="hidden">
+
+          <div class="two">
+            <div class="field"><label>Nombre</label><input id="coName" placeholder="Combo Creatina + Whey"></div>
+            <div class="field"><label>Orden</label><input id="coOrd" type="number" value="1"></div>
+          </div>
+
+          <div class="two">
+            <div class="field"><label>Precio</label><input id="coPrice" type="number" min="0" step="0.01"></div>
+            <div class="field"><label>Precio promo</label><input id="coPromo" type="number" min="0" step="0.01"></div>
+          </div>
+
+          <div class="field"><label>Stock</label><input id="coStock" type="number" min="0" value="0"></div>
+          <div class="field"><label>Descripción / qué incluye</label><textarea id="coDesc" rows="4" placeholder="Incluye Whey Protein + Creatina..."></textarea></div>
+
+          <div class="imagebox">
+            <strong>Foto del combo</strong>
+            <div class="field"><input id="coImageFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
+            <div class="muted" style="font-size:.82rem">La foto se muestra completa sobre fondo blanco, igual que en Productos.</div>
+            <div id="coImagePreview" class="imagepreview"><span class="muted">Sin imagen seleccionada</span></div>
+            <div style="margin-top:10px"><button id="coRemoveImage" type="button" class="btn light">Quitar foto</button></div>
+          </div>
+
+          <div class="checks"><label><input id="coVisible" type="checkbox" checked> Visible</label></div>
+
+          <div class="toolbar">
+            <button id="coSave" class="btn red">Guardar combo</button>
+            <button id="coDelete" class="btn danger hidden">Eliminar</button>
+            <button id="coClear" class="btn light">Limpiar</button>
+          </div>
+
+          <p id="coOk" class="ok"></p>
+          <p id="coErr" class="formerr"></p>
+        </div>
+      </div>
+    </section>
+
+<section id="categoriesPanel" class="hidden">
+      <div class="ag">
+        <div class="panel">
+          <h3>Categorías</h3>
+          <p class="muted">Creá, ordená y administrá las categorías que aparecen en la tienda.</p>
+          <div id="categoryList"></div>
+        </div>
+
+        <div class="panel" id="categoryFormPanel">
+          <h3 id="categoryTitle">Nueva categoría</h3>
+          <input id="categoryId" type="hidden">
+          <div class="two">
+            <div class="field"><label>Nombre</label><input id="cName"></div>
+            <div class="field"><label>Orden</label><input id="cOrd" type="number" value="1"></div>
+          </div>
+          <div class="imagebox">
+            <strong>Foto de la categoría</strong>
+            <div class="field"><input id="cImageFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
+            <div class="muted" style="font-size:.82rem">Funciona igual que las fotos de productos: se mantiene la proporción y se muestra completa.</div>
+            <div id="cImagePreview" class="imagepreview"><span class="muted">Sin imagen seleccionada</span></div>
+            <div style="margin-top:10px"><button id="cRemoveImage" type="button" class="btn light">Quitar foto</button></div>
+          </div>
+          <div class="checks"><label><input id="cVisible" type="checkbox" checked> Visible</label></div>
+          <div class="toolbar">
+            <button id="cSave" class="btn red">Guardar categoría</button>
+            <button id="cDelete" class="btn danger hidden">Eliminar</button>
+            <button id="cClear" class="btn light">Limpiar</button>
+          </div>
+          <p id="cOk" class="ok"></p><p id="cErr" class="formerr"></p>
+        </div>
+      </div>
+    </section>
+
+<section id="promotionsPanel" class="hidden">
+      <div class="ag">
+        <div class="panel">
+          <h3>Promociones / carrusel</h3>
+          <p class="muted">Estos banners se muestran en el carrusel de la portada.</p>
+          <div id="promoList"></div>
+        </div>
+
+        <div class="panel" id="promoFormPanel">
+          <h3 id="promoTitle">Nueva promoción</h3>
+          <input id="promoId" type="hidden">
+          <div class="two"><div class="field"><label>Título</label><input id="prTitle"></div><div class="field"><label>Badge</label><input id="prBadge" placeholder="Promo / 48 hs / Envíos gratis"></div></div>
+          <div class="two"><div class="field"><label>Sticker esquina</label><input id="prSticker" placeholder="%10 OFF"></div><div class="field"><label>Subtítulo</label><input id="prSubtitle"></div></div>
+          <div class="two"><div class="field"><label>Link (opcional)</label><input id="prLink" placeholder="https://..."></div><div class="field"><label>Orden</label><input id="prOrd" type="number" value="1"></div></div>
+          <div class="imagebox">
+            <strong>Imagen del banner</strong>
+            <div class="field"><input id="prImageFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
+            <div class="muted" style="font-size:.82rem">Para que el carrusel calce sin bordes, usá una imagen panorámica. Recomendado: 1920 × 500 px (o proporción similar).</div>
+            <div id="prImagePreview" class="imagepreview"><span class="muted">Sin imagen seleccionada</span></div>
+            <div style="margin-top:10px"><button id="prRemoveImage" type="button" class="btn light">Quitar imagen</button></div>
+          </div>
+          <div class="checks"><label><input id="prActive" type="checkbox" checked> Activa</label></div>
+          <div class="toolbar">
+            <button id="prSave" class="btn red">Guardar promoción</button>
+            <button id="prDelete" class="btn danger hidden">Eliminar</button>
+            <button id="prClear" class="btn light">Limpiar</button>
+          </div>
+          <p id="prOk" class="ok"></p><p id="prErr" class="formerr"></p>
+        </div>
+      </div>
+      <div class="ag" style="margin-top:20px">
+        <div class="panel">
+          <h3>Avisos superiores</h3>
+          <p class="muted">Estos textos rotan en la franja negra de arriba (ej: Envíos gratis, promos, cuotas).</p>
+          <div id="tickerList"></div>
+        </div>
+
+        <div class="panel" id="tickerFormPanel">
+          <h3 id="tickerTitle">Nuevo aviso superior</h3>
+          <input id="tickerId" type="hidden">
+          <div class="field"><label>Texto</label><input id="tText" placeholder="Envíos gratis en La Plata"></div>
+          <div class="two">
+            <div class="field"><label>Orden</label><input id="tOrd" type="number" value="1"></div>
+            <div class="field"><label>Color de las letras</label><input id="tColor" type="color" value="#ffd23f" style="height:44px;padding:4px"></div>
+          </div>
+          <div class="checks"><label><input id="tActive" type="checkbox" checked> Activo</label></div>
+          <div class="toolbar">
+            <button id="tSave" class="btn red">Guardar aviso</button>
+            <button id="tDelete" class="btn danger hidden">Eliminar</button>
+            <button id="tClear" class="btn light">Limpiar</button>
+          </div>
+          <p id="tOk" class="ok"></p><p id="tErr" class="formerr"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="securityPanel" class="hidden">
+      <div class="panel" style="max-width:680px">
+        <h3>Seguridad de la cuenta</h3>
+        <div class="security-note">La sesión se guarda solo en la pestaña actual y se cierra tras 15 minutos de inactividad. Al cerrar la pestaña, el acceso no queda persistido.</div>
+        <div class="field"><label>Contraseña actual</label><input id="currentPass" type="password" autocomplete="off"></div>
+        <div class="field"><label>Nueva contraseña</label><input id="newPass" type="password" autocomplete="new-password"></div>
+        <div class="field"><label>Repetir nueva contraseña</label><input id="confirmPass" type="password" autocomplete="new-password"></div>
+        <button id="changePass" class="btn red">Cambiar contraseña</button>
+        <p id="passOk" class="ok"></p><p id="passErr" class="formerr"></p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const db=supabase.createClient(ORIGENFIT_CONFIG.supabaseUrl, ORIGENFIT_CONFIG.supabaseKey, {auth:{persistSession:true,storage:window.sessionStorage,autoRefreshToken:true,detectSessionInUrl:true}});
+const $=id=>document.getElementById(id);
+const money=n=>n==null?'Consultar':'$'+Number(n).toLocaleString('es-AR');
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let idleTimer=null; const IDLE_MS=15*60*1000;
+
+let products=[], productSelected=null, currentProductImageUrl=null, newProductImageFile=null, removeProductImage=false;
+let combos=[], comboSelected=null, currentComboImageUrl=null, newComboImageFile=null, removeComboImage=false;
+let promos=[], promoSelected=null, currentPromoImageUrl=null, newPromoImageFile=null, removePromoImage=false;
+let categories=[], categorySelected=null, currentCategoryImageUrl=null, newCategoryImageFile=null, removeCategoryImage=false;
+let topMessagesAdmin=[], tickerSelected=null;
+
+function resetIdle(){
+  if(!$('app').classList.contains('hidden')){
+    clearTimeout(idleTimer);
+    idleTimer=setTimeout(async()=>{await db.auth.signOut({scope:'local'});location.reload()}, IDLE_MS);
+  }
+}
+['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt, resetIdle, {passive:true}));
+
+async function verifyAdmin(){
+  const {data:{user}, error} = await db.auth.getUser();
+  if(error || !user) return false;
+  const {data:a, error:ae} = await db.from('admin_users').select('user_id').eq('user_id', user.id).maybeSingle();
+  if(ae || !a) return false;
+  $('who').textContent = user.email || '';
+  return true;
+}
+async function enter(){
+  if(!(await verifyAdmin())) return;
+  $('login').classList.add('hidden'); $('app').classList.remove('hidden'); resetIdle();
+  await Promise.all([loadProducts(), loadCombosAdmin(), loadPromos(), loadCategoriesAdmin(), loadTopMessagesAdmin()]);
+}
+$('loginForm').addEventListener('submit', async e=>{
+  e.preventDefault(); $('loginErr').textContent='';
+  const {error} = await db.auth.signInWithPassword({email:$('email').value.trim(), password:$('pass').value});
+  if(error){ $('loginErr').textContent = error.message; return; }
+  if(!(await verifyAdmin())){
+    await db.auth.signOut({scope:'local'});
+    $('loginErr').textContent='Usuario no autorizado como administrador.';
+    return;
+  }
+  $('pass').value=''; $('login').classList.add('hidden'); $('app').classList.remove('hidden'); resetIdle();
+  await Promise.all([loadProducts(), loadCombosAdmin(), loadPromos(), loadCategoriesAdmin(), loadTopMessagesAdmin()]);
+});
+$('logout').onclick=async()=>{await db.auth.signOut({scope:'local'});location.reload()};
+
+async function prepareImage(file){
+  const bitmap=await createImageBitmap(file);
+  const MAX_SIDE=2000;
+  const scale=Math.min(1, MAX_SIDE/Math.max(bitmap.width, bitmap.height));
+  const w=Math.max(1, Math.round(bitmap.width*scale));
+  const h=Math.max(1, Math.round(bitmap.height*scale));
+  if(scale===1 && ['image/jpeg','image/png','image/webp'].includes(file.type)){
+    bitmap.close();
+    return {blob:file, ext:file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg', contentType:file.type};
+  }
+  const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+  const ctx=canvas.getContext('2d'); ctx.drawImage(bitmap,0,0,w,h); bitmap.close();
+  const usePng=file.type==='image/png'; const type=usePng?'image/png':'image/webp'; const ext=usePng?'png':'webp'; const quality=usePng?undefined:0.9;
+  const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('No se pudo procesar la imagen')), type, quality));
+  return {blob, ext, contentType:type};
+}
+async function uploadToBucket(file, folder, bucket){
+  if(file.size>12*1024*1024) throw new Error('La imagen original supera 12 MB.');
+  const prepared=await prepareImage(file);
+  const path=`${folder}/${Date.now()}-${crypto.randomUUID()}.${prepared.ext}`;
+  const {error}=await db.storage.from(bucket).upload(path, prepared.blob, {contentType:prepared.contentType, cacheControl:'3600', upsert:false});
+  if(error) throw error;
+  const {data}=db.storage.from(bucket).getPublicUrl(path);
+  return {url:data.publicUrl, path};
+}
+function setPreview(id, url){
+  $(id).innerHTML = url ? `<img src="${url}" alt="Vista previa">` : '<span class="muted">Sin imagen seleccionada</span>';
+}
+
+/* PRODUCTS */
+async function loadProducts(){
+  const {data,error}=await db.from('products').select('*').order('sort_order').order('created_at');
+  if(error){ $('adminErr').textContent=error.message; $('adminErr').classList.remove('hidden'); return; }
+  products=data||[]; renderProducts();
+}
+function renderProducts(){
+  $('productList').innerHTML='';
+  if(!products.length){ $('productList').innerHTML='<p class="muted">No hay productos.</p>'; return; }
+  products.forEach(p=>{
+    const b=document.createElement('button');
+    b.className='item'+(p.id===productSelected?' active':'');
+    b.innerHTML=`<b>${esc(p.name)}</b><small>${esc(p.brand||'')} · ${money(p.promo_price||p.price)} · Stock ${p.stock}</small>`;
+    b.onclick=()=>{productSelected=p.id; fillProduct(p); renderProducts();};
+    $('productList').appendChild(b);
+  });
+}
+function fillProduct(p){
+  $('productTitle').textContent='Editar producto';
+  $('productId').value=p.id; $('pName').value=p.name||''; $('pBrand').value=p.brand||''; $('pCat').value=p.category||'';
+  $('pOrd').value=p.sort_order??0; $('pPrice').value=p.price??''; $('pPromo').value=p.promo_price??''; $('pStock').value=p.stock??0; $('pDesc').value=p.description||'';
+  $('pFeatured').checked=!!p.featured; $('pVisible').checked=!!p.visible;
+  currentProductImageUrl=p.image_url||null; newProductImageFile=null; removeProductImage=false; $('pImageFile').value=''; setPreview('pImagePreview', currentProductImageUrl);
+  $('pDelete').classList.remove('hidden'); $('pOk').textContent=''; $('pErr').textContent='';
+}
+function clearProduct(){
+  productSelected=null; currentProductImageUrl=null; newProductImageFile=null; removeProductImage=false;
+  $('productTitle').textContent='Nuevo producto'; ['productId','pName','pBrand','pCat','pPrice','pPromo','pDesc'].forEach(id=>$(id).value='');
+  $('pOrd').value=products.reduce((m,p)=>Math.max(m, Number(p.sort_order||0)),0)+1; $('pStock').value=0; $('pFeatured').checked=false; $('pVisible').checked=true; $('pImageFile').value=''; setPreview('pImagePreview', null);
+  $('pDelete').classList.add('hidden'); $('pOk').textContent=''; $('pErr').textContent=''; renderProducts();
+}
+$('pImageFile').addEventListener('change', e=>{ newProductImageFile=e.target.files?.[0]||null; removeProductImage=false; if(newProductImageFile) setPreview('pImagePreview', URL.createObjectURL(newProductImageFile)); else setPreview('pImagePreview', currentProductImageUrl); });
+$('pRemoveImage').onclick=()=>{ newProductImageFile=null; removeProductImage=true; $('pImageFile').value=''; setPreview('pImagePreview', null); };
+$('pClear').onclick=clearProduct;
+function readProductForm(){
+  return {
+    name:$('pName').value.trim(), brand:$('pBrand').value.trim(), category:$('pCat').value.trim(),
+    sort_order:Number($('pOrd').value||0), price:$('pPrice').value===''?null:Number($('pPrice').value),
+    promo_price:$('pPromo').value===''?null:Number($('pPromo').value), stock:Number($('pStock').value||0),
+    description:$('pDesc').value.trim(), featured:$('pFeatured').checked, visible:$('pVisible').checked
+  };
+}
+$('pSave').onclick=async()=>{
+  $('pOk').textContent=''; $('pErr').textContent=''; const payload=readProductForm();
+  if(!payload.name){ $('pErr').textContent='Ingresá el nombre del producto.'; return; }
+  let uploaded=null;
+  try{
+    if(newProductImageFile){ $('pOk').textContent='Subiendo imagen…'; uploaded=await uploadToBucket(newProductImageFile, 'products', 'product-images'); payload.image_url=uploaded.url; }
+    else if(removeProductImage) payload.image_url=null;
+    else payload.image_url=currentProductImageUrl;
+    const r=productSelected
+      ? await db.from('products').update(payload).eq('id', productSelected).select().single()
+      : await db.from('products').insert(payload).select().single();
+    if(r.error) throw r.error;
+    productSelected=r.data.id; currentProductImageUrl=r.data.image_url||null; newProductImageFile=null; removeProductImage=false; $('pImageFile').value='';
+    $('pOk').textContent='✓ Producto guardado correctamente.'; await loadProducts(); fillProduct(r.data);
+  }catch(err){
+    if(uploaded?.path) await db.storage.from('product-images').remove([uploaded.path]);
+    $('pOk').textContent=''; $('pErr').textContent=err.message||String(err);
+  }
+};
+$('pDelete').onclick=async()=>{
+  if(!productSelected || !confirm('¿Eliminar este producto?')) return;
+  const {error}=await db.from('products').delete().eq('id', productSelected);
+  if(error){ $('pErr').textContent=error.message; return; }
+  clearProduct(); await loadProducts();
+};
+
+/* COMBOS */
+async function loadCombosAdmin(){
+  const {data,error}=await db.from('combos').select('*').order('sort_order').order('created_at');
+  if(error){
+    $('adminErr').textContent='Combos: '+error.message;
+    $('adminErr').classList.remove('hidden');
+    return;
+  }
+  combos=data||[];
+  renderCombosAdmin();
+}
+
+function renderCombosAdmin(){
+  $('comboList').innerHTML='';
+  if(!combos.length){
+    $('comboList').innerHTML='<p class="muted">No hay combos cargados.</p>';
+    return;
+  }
+
+  combos.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='item'+(c.id===comboSelected?' active':'');
+    const finalPrice=(c.promo_price!=null&&Number(c.promo_price)>0)?c.promo_price:c.price;
+    b.innerHTML=`<b>${esc(c.name)}</b><small>${money(finalPrice)} · Stock ${c.stock} · ${c.visible?'Visible':'Oculto'}</small>`;
+    b.onclick=()=>{comboSelected=c.id;fillCombo(c);renderCombosAdmin();};
+    $('comboList').appendChild(b);
+  });
+}
+
+function fillCombo(c){
+  $('comboTitle').textContent='Editar combo';
+  $('comboId').value=c.id;
+  $('coName').value=c.name||'';
+  $('coOrd').value=c.sort_order??0;
+  $('coPrice').value=c.price??'';
+  $('coPromo').value=c.promo_price??'';
+  $('coStock').value=c.stock??0;
+  $('coDesc').value=c.description||'';
+  $('coVisible').checked=!!c.visible;
+
+  currentComboImageUrl=c.image_url||null;
+  newComboImageFile=null;
+  removeComboImage=false;
+  $('coImageFile').value='';
+  setPreview('coImagePreview',currentComboImageUrl);
+
+  $('coDelete').classList.remove('hidden');
+  $('coOk').textContent='';
+  $('coErr').textContent='';
+}
+
+function clearCombo(){
+  comboSelected=null;
+  currentComboImageUrl=null;
+  newComboImageFile=null;
+  removeComboImage=false;
+
+  $('comboTitle').textContent='Nuevo combo';
+  $('comboId').value='';
+  $('coName').value='';
+  $('coOrd').value=combos.reduce((m,c)=>Math.max(m,Number(c.sort_order||0)),0)+1;
+  $('coPrice').value='';
+  $('coPromo').value='';
+  $('coStock').value=0;
+  $('coDesc').value='';
+  $('coVisible').checked=true;
+  $('coImageFile').value='';
+  setPreview('coImagePreview',null);
+
+  $('coDelete').classList.add('hidden');
+  $('coOk').textContent='';
+  $('coErr').textContent='';
+  renderCombosAdmin();
+}
+
+$('coImageFile').addEventListener('change',e=>{
+  newComboImageFile=e.target.files?.[0]||null;
+  removeComboImage=false;
+  if(newComboImageFile){
+    setPreview('coImagePreview',URL.createObjectURL(newComboImageFile));
+  }else{
+    setPreview('coImagePreview',currentComboImageUrl);
+  }
+});
+
+$('coRemoveImage').onclick=()=>{
+  newComboImageFile=null;
+  removeComboImage=true;
+  $('coImageFile').value='';
+  setPreview('coImagePreview',null);
+};
+
+$('coClear').onclick=clearCombo;
+
+function readComboForm(){
+  return {
+    name:$('coName').value.trim(),
+    sort_order:Number($('coOrd').value||0),
+    price:$('coPrice').value===''?null:Number($('coPrice').value),
+    promo_price:$('coPromo').value===''?null:Number($('coPromo').value),
+    stock:Number($('coStock').value||0),
+    description:$('coDesc').value.trim(),
+    visible:$('coVisible').checked
+  };
+}
+
+$('coSave').onclick=async()=>{
+  $('coOk').textContent='';
+  $('coErr').textContent='';
+
+  const payload=readComboForm();
+  if(!payload.name){
+    $('coErr').textContent='Ingresá el nombre del combo.';
+    return;
+  }
+
+  let uploaded=null;
+
+  try{
+    if(newComboImageFile){
+      $('coOk').textContent='Subiendo imagen…';
+      uploaded=await uploadToBucket(newComboImageFile,'combos','combo-images');
+      payload.image_url=uploaded.url;
+    }else if(removeComboImage){
+      payload.image_url=null;
+    }else{
+      payload.image_url=currentComboImageUrl;
+    }
+
+    const r=comboSelected
+      ?await db.from('combos').update(payload).eq('id',comboSelected).select().single()
+      :await db.from('combos').insert(payload).select().single();
+
+    if(r.error) throw r.error;
+
+    comboSelected=r.data.id;
+    currentComboImageUrl=r.data.image_url||null;
+    newComboImageFile=null;
+    removeComboImage=false;
+    $('coImageFile').value='';
+
+    $('coOk').textContent='✓ Combo guardado correctamente.';
+    await loadCombosAdmin();
+    fillCombo(r.data);
+
+  }catch(err){
+    if(uploaded?.path){
+      await db.storage.from('combo-images').remove([uploaded.path]);
+    }
+    $('coOk').textContent='';
+    $('coErr').textContent=err.message||String(err);
+  }
+};
+
+$('coDelete').onclick=async()=>{
+  if(!comboSelected||!confirm('¿Eliminar este combo?'))return;
+
+  const {error}=await db.from('combos').delete().eq('id',comboSelected);
+
+  if(error){
+    $('coErr').textContent=error.message;
+    return;
+  }
+
+  clearCombo();
+  await loadCombosAdmin();
+};
+
+/* CATEGORIES */
+async function loadCategoriesAdmin(){
+  const {data,error}=await db.from('categories').select('*').order('sort_order').order('created_at');
+  if(error){ $('adminErr').textContent=error.message; $('adminErr').classList.remove('hidden'); return; }
+  categories=data||[];
+  renderCategoriesAdmin();
+  refreshCategoryOptions();
+}
+function refreshCategoryOptions(){
+  const dl=$('categoryOptions');
+  if(!dl)return;
+  dl.innerHTML='';
+  categories.forEach(c=>dl.insertAdjacentHTML('beforeend', `<option value="${esc(c.name)}"></option>`));
+}
+function renderCategoriesAdmin(){
+  $('categoryList').innerHTML='';
+  if(!categories.length){ $('categoryList').innerHTML='<p class="muted">No hay categorías.</p>'; return; }
+  categories.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='item'+(c.id===categorySelected?' active':'');
+    b.innerHTML=`<b>${esc(c.name)}</b><small>${c.visible?'Visible':'Oculta'} · Orden ${c.sort_order}</small>`;
+    b.onclick=()=>{categorySelected=c.id; fillCategory(c); renderCategoriesAdmin();};
+    $('categoryList').appendChild(b);
+  });
+}
+function fillCategory(c){
+  $('categoryTitle').textContent='Editar categoría';
+  $('categoryId').value=c.id; $('cName').value=c.name||''; $('cOrd').value=c.sort_order??0; $('cVisible').checked=!!c.visible;
+  currentCategoryImageUrl=c.image_url||null; newCategoryImageFile=null; removeCategoryImage=false; $('cImageFile').value=''; setPreview('cImagePreview', currentCategoryImageUrl);
+  $('cDelete').classList.remove('hidden'); $('cOk').textContent=''; $('cErr').textContent='';
+}
+function clearCategory(){
+  categorySelected=null; currentCategoryImageUrl=null; newCategoryImageFile=null; removeCategoryImage=false;
+  $('categoryTitle').textContent='Nueva categoría'; $('categoryId').value=''; $('cName').value='';
+  $('cOrd').value=categories.reduce((m,c)=>Math.max(m,Number(c.sort_order||0)),0)+1; $('cVisible').checked=true; $('cImageFile').value=''; setPreview('cImagePreview', null);
+  $('cDelete').classList.add('hidden'); $('cOk').textContent=''; $('cErr').textContent=''; renderCategoriesAdmin();
+}
+$('cImageFile').addEventListener('change', e=>{
+  newCategoryImageFile=e.target.files?.[0]||null; removeCategoryImage=false;
+  if(newCategoryImageFile) setPreview('cImagePreview', URL.createObjectURL(newCategoryImageFile));
+  else setPreview('cImagePreview', currentCategoryImageUrl);
+});
+$('cRemoveImage').onclick=()=>{ newCategoryImageFile=null; removeCategoryImage=true; $('cImageFile').value=''; setPreview('cImagePreview', null); };
+$('cClear').onclick=clearCategory;
+$('cSave').onclick=async()=>{
+  $('cOk').textContent=''; $('cErr').textContent='';
+  const payload={name:$('cName').value.trim(), sort_order:Number($('cOrd').value||0), visible:$('cVisible').checked};
+  if(!payload.name){ $('cErr').textContent='Ingresá el nombre de la categoría.'; return; }
+  let uploaded=null;
+  try{
+    if(newCategoryImageFile){
+      $('cOk').textContent='Subiendo imagen…';
+      uploaded=await uploadToBucket(newCategoryImageFile,'categories','category-images');
+      payload.image_url=uploaded.url;
+    } else if(removeCategoryImage) payload.image_url=null;
+    else payload.image_url=currentCategoryImageUrl;
+
+    const r=categorySelected
+      ? await db.from('categories').update(payload).eq('id',categorySelected).select().single()
+      : await db.from('categories').insert(payload).select().single();
+
+    if(r.error) throw r.error;
+    categorySelected=r.data.id; currentCategoryImageUrl=r.data.image_url||null; newCategoryImageFile=null; removeCategoryImage=false; $('cImageFile').value='';
+    $('cOk').textContent='✓ Categoría guardada correctamente.';
+    await loadCategoriesAdmin(); fillCategory(r.data);
+  }catch(err){
+    if(uploaded?.path) await db.storage.from('category-images').remove([uploaded.path]);
+    $('cOk').textContent=''; $('cErr').textContent=err.message||String(err);
+  }
+};
+$('cDelete').onclick=async()=>{
+  if(!categorySelected || !confirm('¿Eliminar esta categoría? Los productos no se eliminan.')) return;
+  const {error}=await db.from('categories').delete().eq('id',categorySelected);
+  if(error){ $('cErr').textContent=error.message; return; }
+  clearCategory(); await loadCategoriesAdmin();
+};
+
+/* PROMOTIONS */
+async function loadPromos(){
+  const {data,error}=await db.from('promotions').select('*').order('sort_order').order('created_at');
+  if(error){ $('adminErr').textContent=error.message; $('adminErr').classList.remove('hidden'); return; }
+  promos=data||[]; renderPromosAdmin();
+}
+function renderPromosAdmin(){
+  $('promoList').innerHTML='';
+  if(!promos.length){ $('promoList').innerHTML='<p class="muted">No hay promociones.</p>'; return; }
+  promos.forEach(p=>{
+    const b=document.createElement('button');
+    b.className='item'+(p.id===promoSelected?' active':'');
+    b.innerHTML=`<b>${esc(p.title||'Sin título')}</b><small>${p.active?'Activa':'Oculta'} · Orden ${p.sort_order}</small>`;
+    b.onclick=()=>{promoSelected=p.id; fillPromo(p); renderPromosAdmin();};
+    $('promoList').appendChild(b);
+  });
+}
+function fillPromo(p){
+  $('promoTitle').textContent='Editar promoción';
+  $('promoId').value=p.id; $('prTitle').value=p.title||''; $('prBadge').value=p.badge||''; $('prSticker').value=p.sticker_text||''; $('prSubtitle').value=p.subtitle||''; $('prLink').value=p.link_url||''; $('prOrd').value=p.sort_order??0;
+  $('prActive').checked=!!p.active;
+  currentPromoImageUrl=p.image_url||null; newPromoImageFile=null; removePromoImage=false; $('prImageFile').value=''; setPreview('prImagePreview', currentPromoImageUrl);
+  $('prDelete').classList.remove('hidden'); $('prOk').textContent=''; $('prErr').textContent='';
+}
+function clearPromo(){
+  promoSelected=null; currentPromoImageUrl=null; newPromoImageFile=null; removePromoImage=false;
+  $('promoTitle').textContent='Nueva promoción'; ['promoId','prTitle','prBadge','prSticker','prSubtitle','prLink'].forEach(id=>$(id).value='');
+  $('prOrd').value=promos.reduce((m,p)=>Math.max(m, Number(p.sort_order||0)),0)+1; $('prActive').checked=true; $('prImageFile').value=''; setPreview('prImagePreview', null);
+  $('prDelete').classList.add('hidden'); $('prOk').textContent=''; $('prErr').textContent=''; renderPromosAdmin();
+}
+$('prImageFile').addEventListener('change', e=>{ newPromoImageFile=e.target.files?.[0]||null; removePromoImage=false; if(newPromoImageFile) setPreview('prImagePreview', URL.createObjectURL(newPromoImageFile)); else setPreview('prImagePreview', currentPromoImageUrl); });
+$('prRemoveImage').onclick=()=>{ newPromoImageFile=null; removePromoImage=true; $('prImageFile').value=''; setPreview('prImagePreview', null); };
+$('prClear').onclick=clearPromo;
+function readPromoForm(){
+  return {
+    title:$('prTitle').value.trim(),
+    badge:$('prBadge').value.trim(),
+    sticker_text:$('prSticker').value.trim(),
+    subtitle:$('prSubtitle').value.trim(),
+    link_url:$('prLink').value.trim(),
+    sort_order:Number($('prOrd').value||0),
+    active:$('prActive').checked
+  };
+}
+$('prSave').onclick=async()=>{
+  $('prOk').textContent=''; $('prErr').textContent=''; const payload=readPromoForm();
+  if(!payload.title){ $('prErr').textContent='Ingresá el título de la promoción.'; return; }
+  let uploaded=null;
+  try{
+    if(newPromoImageFile){ $('prOk').textContent='Subiendo banner…'; uploaded=await uploadToBucket(newPromoImageFile, 'promos', 'promo-images'); payload.image_url=uploaded.url; }
+    else if(removePromoImage) payload.image_url=null;
+    else payload.image_url=currentPromoImageUrl;
+    const r=promoSelected
+      ? await db.from('promotions').update(payload).eq('id', promoSelected).select().single()
+      : await db.from('promotions').insert(payload).select().single();
+    if(r.error) throw r.error;
+    promoSelected=r.data.id; currentPromoImageUrl=r.data.image_url||null; newPromoImageFile=null; removePromoImage=false; $('prImageFile').value='';
+    $('prOk').textContent='✓ Promoción guardada correctamente.'; await loadPromos(); fillPromo(r.data);
+  }catch(err){
+    if(uploaded?.path) await db.storage.from('promo-images').remove([uploaded.path]);
+    $('prOk').textContent=''; $('prErr').textContent=err.message||String(err);
+  }
+};
+$('prDelete').onclick=async()=>{
+  if(!promoSelected || !confirm('¿Eliminar esta promoción?')) return;
+  const {error}=await db.from('promotions').delete().eq('id', promoSelected);
+  if(error){ $('prErr').textContent=error.message; return; }
+  clearPromo(); await loadPromos();
+};
+
+/* TOP BAR MESSAGES */
+async function loadTopMessagesAdmin(){
+  const {data,error}=await db.from('top_messages').select('*').order('sort_order').order('created_at');
+  if(error){
+    $('tickerList').innerHTML='<p class="muted">Para usar los avisos superiores, ejecutá primero el archivo <b>upgrade_v18.sql</b> en Supabase.</p>';
+    console.warn(error.message);
+    return;
+  }
+  topMessagesAdmin=data||[]; renderTopMessagesAdmin(); if(!tickerSelected) clearTopMessage();
+}
+function renderTopMessagesAdmin(){
+  $('tickerList').innerHTML='';
+  if(!topMessagesAdmin.length){ $('tickerList').innerHTML='<p class="muted">No hay avisos cargados.</p>'; return; }
+  topMessagesAdmin.forEach(t=>{
+    const b=document.createElement('button');
+    b.className='item'+(t.id===tickerSelected?' active':'');
+    b.innerHTML=`<b><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${esc(t.text_color||'#ffd23f')};margin-right:7px;border:1px solid #bbb"></span>${esc(t.text||'Sin texto')}</b><small>${t.active?'Activo':'Oculto'} · Orden ${t.sort_order}</small>`;
+    b.onclick=()=>{ tickerSelected=t.id; fillTopMessage(t); renderTopMessagesAdmin(); };
+    $('tickerList').appendChild(b);
+  });
+}
+function fillTopMessage(t){
+  $('tickerTitle').textContent='Editar aviso superior';
+  $('tickerId').value=t.id; $('tText').value=t.text||''; $('tOrd').value=t.sort_order??0; $('tColor').value=t.text_color||'#ffd23f'; $('tActive').checked=!!t.active;
+  $('tDelete').classList.remove('hidden'); $('tOk').textContent=''; $('tErr').textContent='';
+}
+function clearTopMessage(){
+  tickerSelected=null; $('tickerTitle').textContent='Nuevo aviso superior'; $('tickerId').value=''; $('tText').value='';
+  $('tOrd').value=topMessagesAdmin.reduce((m,t)=>Math.max(m, Number(t.sort_order||0)),0)+1; $('tColor').value='#ffd23f'; $('tActive').checked=true;
+  $('tDelete').classList.add('hidden'); $('tOk').textContent=''; $('tErr').textContent=''; renderTopMessagesAdmin();
+}
+$('tClear').onclick=clearTopMessage;
+$('tSave').onclick=async()=>{
+  $('tOk').textContent=''; $('tErr').textContent='';
+  const payload={
+    text:$('tText').value.trim(),
+    text_color:$('tColor').value||'#ffd23f',
+    sort_order:Number($('tOrd').value||0),
+    active:$('tActive').checked
+  };
+  if(!payload.text){ $('tErr').textContent='Ingresá el texto del aviso.'; return; }
+  const r=tickerSelected
+    ? await db.from('top_messages').update(payload).eq('id', tickerSelected).select().single()
+    : await db.from('top_messages').insert(payload).select().single();
+  if(r.error){ $('tErr').textContent=r.error.message; return; }
+  tickerSelected=r.data.id; $('tOk').textContent='✓ Aviso guardado correctamente.'; await loadTopMessagesAdmin(); fillTopMessage(r.data);
+};
+$('tDelete').onclick=async()=>{
+  if(!tickerSelected || !confirm('¿Eliminar este aviso superior?')) return;
+  const {error}=await db.from('top_messages').delete().eq('id', tickerSelected);
+  if(error){ $('tErr').textContent=error.message; return; }
+  clearTopMessage(); await loadTopMessagesAdmin();
+};
+
+/* security */
+$('changePass').onclick=async()=>{
+  $('passOk').textContent=''; $('passErr').textContent='';
+  const current=$('currentPass').value, newp=$('newPass').value, confirm=$('confirmPass').value;
+  if(!current){ $('passErr').textContent='Ingresá la contraseña actual.'; return; }
+  if(newp.length<8){ $('passErr').textContent='Usá una contraseña de al menos 8 caracteres.'; return; }
+  if(newp!==confirm){ $('passErr').textContent='Las contraseñas nuevas no coinciden.'; return; }
+  const {error}=await db.auth.updateUser({password:newp,current_password:current});
+  if(error){ $('passErr').textContent=error.message; return; }
+  $('passOk').textContent='✓ Contraseña actualizada. Cerrando todas las sesiones…';
+  $('currentPass').value=''; $('newPass').value=''; $('confirmPass').value='';
+  setTimeout(async()=>{ await db.auth.signOut({scope:'global'}); location.reload(); }, 900);
+};
+
+/* UI switch */
+function switchPanel(name){
+  document.querySelectorAll('.sidebtn[data-panel]').forEach(b=>b.classList.toggle('active', b.dataset.panel===name));
+  $('productsPanel').classList.toggle('hidden', name!=='products');
+  $('combosPanel').classList.toggle('hidden', name!=='combos');
+  $('categoriesPanel').classList.toggle('hidden', name!=='categories');
+  $('promotionsPanel').classList.toggle('hidden', name!=='promotions');
+  $('securityPanel').classList.toggle('hidden', name!=='security');
+
+  $('pageTitle').textContent =
+    name==='products' ? 'Catálogo' :
+    name==='combos' ? 'Combos' :
+    name==='categories' ? 'Categorías' :
+    name==='promotions' ? 'Promociones' :
+    'Seguridad';
+
+  $('newAction').classList.toggle('hidden', name==='security');
+
+  $('newAction').textContent =
+    name==='products' ? '+ Nuevo producto' :
+    name==='combos' ? '+ Nuevo combo' :
+    name==='categories' ? '+ Nueva categoría' :
+    '+ Nueva promoción';
+}
+document.querySelectorAll('.sidebtn[data-panel]').forEach(b=>b.onclick=()=>switchPanel(b.dataset.panel));
+$('newAction').onclick=()=>{
+  const panel = [...document.querySelectorAll('.sidebtn[data-panel]')].find(b=>b.classList.contains('active'))?.dataset.panel;
+  if(panel==='products'){ clearProduct(); $('productFormPanel').scrollIntoView({behavior:'smooth',block:'start'}); }
+  else if(panel==='combos'){ clearCombo(); $('comboFormPanel').scrollIntoView({behavior:'smooth',block:'start'}); }
+  else if(panel==='categories'){ clearCategory(); $('categoryFormPanel').scrollIntoView({behavior:'smooth',block:'start'}); }
+  else if(panel==='promotions'){ clearPromo(); $('promoFormPanel').scrollIntoView({behavior:'smooth',block:'start'}); }
+};
+
+enter();
+</script>
+</body>
+</html>
