@@ -271,19 +271,31 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
 });
 
-/* Ajuste visual del ícono de WhatsApp del header: evita que el borde quede recortado. */
+/* Ajuste visual del ícono de WhatsApp del header. */
 document.addEventListener('DOMContentLoaded',()=>{
+  const whatsappLink=document.querySelector('.shop-header .icon-btn[aria-label="WhatsApp"]');
+  if(!whatsappLink) return;
+
+  // El PNG original es pequeño y contiene negro/blanco dentro de la propia imagen.
+  // Se reemplaza en pantalla por un SVG vectorial limpio para que no se recorte ni pierda definición.
+  whatsappLink.innerHTML=`
+    <svg class="whatsapp-vector" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path d="M16 4.2a11.2 11.2 0 0 0-9.7 16.8L4.8 27.8l6.9-1.5A11.2 11.2 0 1 0 16 4.2Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M11.4 10.3c.5-.5 1.1-.5 1.5 0l1.35 2.05c.22.36.2.8-.08 1.1l-.9 1.02c.88 1.9 2.4 3.42 4.32 4.32l1.02-.92c.32-.28.76-.3 1.12-.07l2.02 1.32c.5.32.62.9.36 1.43-.48.98-1.65 1.8-2.92 1.8-5.05 0-9.15-4.1-9.15-9.15 0-1.2.5-2.2 1.36-2.9Z" fill="currentColor"/>
+    </svg>`;
+
   const style=document.createElement('style');
   style.textContent=`
     .shop-header .icon-btn[aria-label="WhatsApp"]{
       overflow:visible;
+      color:#fff;
     }
-    .shop-header .whatsapp-mark{
-      width:28px!important;
-      height:28px!important;
-      object-fit:contain!important;
-      box-sizing:border-box;
-      padding:2px;
+    .shop-header .whatsapp-vector{
+      width:32px;
+      height:32px;
+      display:block;
+      overflow:visible;
+      flex:none;
     }
   `;
   document.head.appendChild(style);
