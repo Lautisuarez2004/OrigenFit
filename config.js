@@ -5,3 +5,4 @@ window.ORIGENFIT_CONFIG={
 /* Carga sincrónica de las mejoras acumuladas + extensiones especiales. */
 document.write('<script src="config-core.js?v=20260814-1"><\/script>');
 document.write('<script src="todos-special.js?v=20260814-1"><\/script>');
+document.write('<script src="promo-overlay.js?v=20260814-1"><\/script>');
