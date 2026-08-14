@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   };
 
-  // Capture asegura que la categoría se limpie antes de ejecutar la búsqueda existente.
   searchInput.addEventListener('input',enableGlobalSearch,true);
   searchInput.addEventListener('keydown',e=>{
     if(e.key==='Enter') enableGlobalSearch();
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     searchButton.addEventListener('click',enableGlobalSearch,true);
   }
 
-  // Si el usuario vuelve a elegir una categoría, la búsqueda deja de aplicarse.
   document.addEventListener('click',e=>{
     const categoryButton=e.target.closest?.('.category-card, .drawer-category');
     if(!categoryButton) return;
@@ -118,7 +116,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     return {shell,prev,next};
   }
 
-  /* CATEGORÍAS */
   const categoryGrid=document.getElementById('categoriesGrid');
   const categoryUI=makeShell(categoryGrid,'category');
   let categoryOffset=0;
@@ -163,7 +160,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     renderCategoryCarousel();
   }
 
-  /* PRODUCTOS */
   const productGrid=document.getElementById('grid');
   const productUI=makeShell(productGrid,'product');
   let productOffset=0;
@@ -190,7 +186,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       pages=totalPages;
       total=totalProducts;
       pageSize=PRODUCTS_PER_PAGE;
-    }catch(_){/* todavía cargando */}
+    }catch(_){ }
 
     productUI.prev.disabled=(page<=1 && productOffset<=0);
     productUI.next.disabled=(page>=pages && productOffset>=maxLocalStart);
@@ -360,4 +356,54 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
   `;
   document.head.appendChild(style);
+});
+
+/* Categorías con imagen: foto a sangre completa, sin marco blanco ni título repetido. */
+document.addEventListener('DOMContentLoaded',()=>{
+  const grid=document.getElementById('categoriesGrid');
+  if(!grid) return;
+
+  const style=document.createElement('style');
+  style.textContent=`
+    .categories-grid .category-card.has-category-image{
+      padding:0!important;
+      overflow:hidden!important;
+      aspect-ratio:1.45/1;
+      background:#111!important;
+    }
+    .categories-grid .category-card.has-category-image .category-art{
+      width:100%!important;
+      height:100%!important;
+      min-height:0!important;
+      margin:0!important;
+      padding:0!important;
+      border-radius:0!important;
+      background:#111!important;
+      overflow:hidden!important;
+    }
+    .categories-grid .category-card.has-category-image .category-art img{
+      width:100%!important;
+      height:100%!important;
+      max-width:none!important;
+      max-height:none!important;
+      display:block!important;
+      object-fit:cover!important;
+      object-position:center!important;
+    }
+    .categories-grid .category-card.has-category-image .category-name{
+      display:none!important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  const markImageCards=()=>{
+    grid.querySelectorAll('.category-card').forEach(card=>{
+      const hasImage=!!card.querySelector('.category-art img');
+      card.classList.toggle('has-category-image',hasImage);
+    });
+  };
+
+  const observer=new MutationObserver(()=>requestAnimationFrame(markImageCards));
+  observer.observe(grid,{childList:true,subtree:true});
+  markImageCards();
 });
