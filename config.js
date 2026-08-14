@@ -299,3 +299,65 @@ document.addEventListener('DOMContentLoaded',()=>{
   `;
   document.head.appendChild(style);
 });
+
+/* Tarjetas de producto uniformes: mantiene alineados textos, fotos y CTA aunque cambie el contenido. */
+document.addEventListener('DOMContentLoaded',()=>{
+  const style=document.createElement('style');
+  style.textContent=`
+    .products .product-card-link{
+      display:flex!important;
+      flex-direction:column;
+      height:100%;
+    }
+    .products .product-card-link .art{
+      flex:0 0 290px;
+      height:290px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .products .product-card-link .art img{
+      width:100%;
+      height:100%;
+      max-width:86%;
+      max-height:86%;
+      object-fit:contain;
+      object-position:center;
+    }
+    .products .product-card-link .body-card{
+      display:flex;
+      flex-direction:column;
+      flex:1 1 auto;
+      min-height:0;
+    }
+    .products .product-card-link .row{
+      min-height:58px;
+    }
+    .products .product-card-link .row h3{
+      display:-webkit-box;
+      -webkit-box-orient:vertical;
+      -webkit-line-clamp:2;
+      overflow:hidden;
+    }
+    .products .product-card-link .desc{
+      min-height:3.9em;
+      display:-webkit-box;
+      -webkit-box-orient:vertical;
+      -webkit-line-clamp:3;
+      overflow:hidden;
+    }
+    .products .product-card-link .tags{
+      min-height:34px;
+      align-content:flex-start;
+    }
+    .products .product-card-link .product-wa{
+      margin-top:auto!important;
+    }
+    @media(max-width:650px){
+      .products .product-card-link .row{min-height:auto}
+      .products .product-card-link .desc{min-height:auto}
+      .products .product-card-link .tags{min-height:auto}
+    }
+  `;
+  document.head.appendChild(style);
+});
