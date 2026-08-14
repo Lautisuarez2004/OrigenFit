@@ -270,3 +270,21 @@ document.addEventListener('DOMContentLoaded',()=>{
     renderProductCarousel();
   });
 });
+
+/* Ajuste visual del ícono de WhatsApp del header: evita que el borde quede recortado. */
+document.addEventListener('DOMContentLoaded',()=>{
+  const style=document.createElement('style');
+  style.textContent=`
+    .shop-header .icon-btn[aria-label="WhatsApp"]{
+      overflow:visible;
+    }
+    .shop-header .whatsapp-mark{
+      width:28px!important;
+      height:28px!important;
+      object-fit:contain!important;
+      box-sizing:border-box;
+      padding:2px;
+    }
+  `;
+  document.head.appendChild(style);
+});
