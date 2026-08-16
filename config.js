@@ -7,6 +7,8 @@ document.write('<script src="config-core.js?v=20260814-1"><\/script>');
 document.write('<script src="todos-special.js?v=20260814-1"><\/script>');
 document.write('<script src="promo-overlay.js?v=20260814-1"><\/script>');
 document.write('<script src="carousel-visibility-fix.js?v=20260814-2"><\/script>');
+document.write('<script src="admin-product-enhancements.js?v=20260816-1"><\/script>');
+document.write('<script src="product-experience.js?v=20260816-1"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
