@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
 
   const CART_KEY='origenfit-cart-v1';
   const fmt=n=>'$'+Number(n||0).toLocaleString('es-AR',{maximumFractionDigits:2});
-  const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
   const baseKey=(type,id)=>`${type}:${id}`;
   const lineKey=x=>`${x.type}:${x.id}:${encodeURIComponent(x.flavor||'')}`;
   const normalizeFlavor=s=>String(s||'').trim();
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
       const oldStock=[...card.querySelectorAll('.tags .tag')].find(x=>/^Stock:|^Sin stock$/i.test(x.textContent.trim()));if(oldStock)oldStock.style.display='none';
       const wa=card.querySelector('.product-wa');if(wa)wa.innerHTML='<span>Ver producto</span><span>→</span>';
       let btn=card.querySelector('.of-add-cart');if(!btn){btn=document.createElement('button');btn.type='button';btn.className='of-add-cart';(wa||card.querySelector('.body-card'))?.insertAdjacentElement('beforebegin',btn);}
-      const flavorRequired=needsFlavor(p);btn.disabled=Number(p.stock)<=0;btn.textContent=Number(p.stock)<=0?'Sin stock':flavorRequired?'Elegir sabor':'Agregar al carrito';
+      const flavorRequired=needsFlavor(p);btn.disabled=Number(p.stock)<=0;btn.textContent=Number(p.stock)<=0?'Sin stock':'Agregar al carrito';
       btn.onclick=e=>{e.preventDefault();e.stopPropagation();if(Number(p.stock)<=0)return;if(flavorRequired)window.open(card.href,'_blank','noopener');else add('product',String(p.id),'');};
     });
     const grid=document.getElementById('grid');new MutationObserver(()=>requestAnimationFrame(decorate)).observe(grid,{childList:true,subtree:true});decorate();
