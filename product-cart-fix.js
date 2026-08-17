@@ -1,4 +1,4 @@
-/* Origen Fit · garantiza Agregar al carrito en cada tarjeta de Producto */
+/* Origen Fit · garantiza ficha individual + Agregar al carrito en cada tarjeta de Producto */
 document.addEventListener('DOMContentLoaded',async()=>{
   const grid=document.getElementById('grid');
   if(!grid)return;
@@ -13,15 +13,17 @@ document.addEventListener('DOMContentLoaded',async()=>{
     if(error)throw error;
     products=data||[];
   }catch(err){
-    console.warn('Botón carrito productos:',err?.message||err);
+    console.warn('Ficha/carrito productos:',err?.message||err);
     return;
   }
 
   const identify=card=>{
-    const direct=products.find(p=>p.id===card.dataset.productId);
+    const direct=products.find(p=>String(p.id)===String(card.dataset.productId||''));
     if(direct)return direct;
     const name=card.querySelector('h3')?.textContent?.trim()||'';
-    const brand=card.querySelector('.tags .tag')?.textContent?.trim()||'';
+    const brand=[...card.querySelectorAll('.tags .tag')]
+      .map(x=>x.textContent?.trim()||'')
+      .find(x=>x&&!/^Stock\s*:|^Sin stock$/i.test(x))||'';
     const candidates=products.filter(p=>p.name===name);
     return candidates.find(p=>(p.brand||'')===brand)||candidates[0]||null;
   };
@@ -30,6 +32,15 @@ document.addEventListener('DOMContentLoaded',async()=>{
     grid.querySelectorAll('.product-card-link').forEach(card=>{
       const p=identify(card);if(!p)return;
       card.dataset.productId=p.id;
+
+      /* Igual que Combos: toda la tarjeta abre la ficha individual en otra pestaña. */
+      card.href=`producto.html?id=${encodeURIComponent(p.id)}`;
+      card.target='_blank';
+      card.rel='noopener';
+      card.setAttribute('aria-label',`Ver ${p.name}`);
+
+      const wa=card.querySelector('.product-wa');
+      if(wa)wa.innerHTML='<span>Ver producto</span><span>→</span>';
 
       let btn=card.querySelector('.of-product-add-cart');
       if(!btn){
@@ -75,7 +86,14 @@ document.addEventListener('DOMContentLoaded',async()=>{
   `;
   document.head.appendChild(style);
 
-  new MutationObserver(()=>requestAnimationFrame(decorate)).observe(grid,{childList:true,subtree:true});
+  /* Reaplica navegación y carrito cuando búsqueda/categoría/paginación redibujan el grid. */
+  let queued=false;
+  const schedule=()=>{
+    if(queued)return;
+    queued=true;
+    requestAnimationFrame(()=>{queued=false;decorate();});
+  };
+  new MutationObserver(schedule).observe(grid,{childList:true,subtree:true});
   decorate();
   setTimeout(decorate,900);
 });
