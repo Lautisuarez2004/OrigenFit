@@ -24,17 +24,15 @@ document.addEventListener('DOMContentLoaded',async()=>{
       card.href=`producto.html?id=${encodeURIComponent(p.id)}`;card.target='_blank';card.rel='noopener';card.setAttribute('aria-label',`Ver ${p.name}`);
       card.querySelector('.desc')?.remove();
       const wa=card.querySelector('.product-wa');if(wa)wa.innerHTML='<span>Ver producto</span><span>→</span>';
-
       let btn=card.querySelector('.of-product-add-cart');
       if(!btn){
         const existing=card.querySelector('.of-add-cart');
         if(existing){btn=existing;btn.classList.add('of-product-add-cart');}
         else{btn=document.createElement('button');btn.type='button';btn.className='of-add-cart of-product-add-cart';const target=card.querySelector('.product-wa');if(target)target.insertAdjacentElement('beforebegin',btn);else card.querySelector('.body-card')?.appendChild(btn);}
       }
-
       const needsChoice=hasFlavors(p);
       btn.disabled=Number(p.stock)<=0;
-      btn.textContent=Number(p.stock)<=0?'Sin stock':needsChoice?'Elegir sabor':'Agregar al carrito';
+      btn.textContent=Number(p.stock)<=0?'Sin stock':'Agregar al carrito';
       btn.onclick=e=>{
         e.preventDefault();e.stopPropagation();if(Number(p.stock)<=0)return;
         if(needsChoice){window.open(card.href,'_blank','noopener');return;}
@@ -42,13 +40,11 @@ document.addEventListener('DOMContentLoaded',async()=>{
       };
     });
   };
-
   const style=document.createElement('style');style.textContent=`
     .product-card-link .of-product-add-cart{display:block!important;width:100%!important;border:0!important;border-radius:999px!important;padding:11px 14px!important;background:#111!important;color:#fff!important;font-weight:950!important;margin-top:12px!important;cursor:pointer!important}
     .product-card-link .of-product-add-cart:disabled{background:#d9d9dd!important;color:#777!important;cursor:not-allowed!important}
     .product-card-link .desc{display:none!important}
   `;document.head.appendChild(style);
-
   let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;decorate();});};
   new MutationObserver(schedule).observe(grid,{childList:true,subtree:true});decorate();setTimeout(decorate,900);
 });
