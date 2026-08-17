@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
     .of-stock-badge{background:#111;color:#fff}.of-stock-badge.out{background:#f3dfe1;color:#9b2028}
     .of-free-shipping{background:#e9f7ef;color:#14743a}
     .of-card-flags{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
-    .of-promo-label{font-size:.72rem;line-height:1.2;color:#666971;font-weight:850;margin-top:4px;text-align:right}
+    .of-promo-label{font-size:.72rem;line-height:1.2;color:#666971;font-weight:850;margin:6px 0 0;text-align:right}
     .products .product-card-link .desc{display:none!important}
     .products .product-card-link .tags{margin-top:14px}
     .of-add-cart{width:100%;border:0;border-radius:999px;padding:11px 14px;background:#111;color:#fff;font-weight:950;margin-top:12px}
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
           const label=document.createElement('div');
           label.className='of-promo-label';
           label.textContent=p.promo_label;
-          price.insertAdjacentElement('afterend',label);
+          (price.closest('.row')||price).insertAdjacentElement('afterend',label);
         }
 
         const tags=card.querySelector('.tags');
