@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
 
   try{
     const {data,error}=await db.from('products')
-      .select('id,name,brand,category,price,promo_price,stock,image_url,free_shipping,visible')
+      .select('id,name,brand,category,price,promo_price,promo_label,stock,image_url,free_shipping,visible')
       .eq('visible',true);
     if(error) throw error;
     products=data||[];
@@ -29,11 +29,12 @@ document.addEventListener('DOMContentLoaded',async()=>{
     if(Array.isArray(saved)) cart=saved.filter(x=>x&&byId.has(x.id)&&Number(x.quantity)>0).map(x=>({id:x.id,quantity:Number(x.quantity)}));
   }catch(_){cart=[];}
 
-  const priceOf=p=>{
+  const isPromo=p=>{
     const normal=p.price==null?null:Number(p.price);
     const promo=p.promo_price==null?null:Number(p.promo_price);
-    return promo!=null&&promo>0&&(normal==null||promo<normal)?promo:normal;
+    return promo!=null&&promo>0&&(normal==null||promo<normal);
   };
+  const priceOf=p=>isPromo(p)?Number(p.promo_price):Number(p.price||0);
   const save=()=>localStorage.setItem(CART_KEY,JSON.stringify(cart));
   const prune=()=>{
     cart=cart.filter(x=>{
@@ -54,6 +55,9 @@ document.addEventListener('DOMContentLoaded',async()=>{
     .of-stock-badge{background:#111;color:#fff}.of-stock-badge.out{background:#f3dfe1;color:#9b2028}
     .of-free-shipping{background:#e9f7ef;color:#14743a}
     .of-card-flags{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+    .of-promo-label{font-size:.72rem;line-height:1.2;color:#666971;font-weight:850;margin-top:4px;text-align:right}
+    .products .product-card-link .desc{display:none!important}
+    .products .product-card-link .tags{margin-top:14px}
     .of-add-cart{width:100%;border:0;border-radius:999px;padding:11px 14px;background:#111;color:#fff;font-weight:950;margin-top:12px}
     .of-add-cart:disabled{background:#d9d9dd;color:#777;cursor:not-allowed}
     .of-cart-fab{position:fixed;right:20px;bottom:20px;z-index:120;border:0;border-radius:999px;background:var(--red,#e30613);color:#fff;padding:14px 18px;font-weight:950;box-shadow:0 14px 32px rgba(0,0,0,.26);display:flex;gap:8px;align-items:center}
@@ -65,7 +69,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
     .of-cart-item{display:grid;grid-template-columns:58px 1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #e7e7e9}.of-cart-item img{width:58px;height:58px;object-fit:contain;border-radius:10px;background:#fafafa}
     .of-cart-item h4{margin:0 0 5px;font-size:.92rem}.of-cart-price{font-weight:950;color:var(--red,#e30613)}.of-cart-qty{display:flex;align-items:center;gap:7px;margin-top:7px}.of-cart-qty button{width:29px;height:29px;border:1px solid #ddd;border-radius:8px;background:#fff;font-weight:900}.of-cart-remove{border:0;background:none;color:#9b2028;font-size:.8rem}
     .of-cart-foot{border-top:1px solid #e7e7e9;padding:16px}.of-cart-total{display:flex;justify-content:space-between;font-size:1.18rem;font-weight:950;margin-bottom:12px}.of-cart-checkout{width:100%;border:0;border-radius:999px;padding:13px;background:#111;color:#fff;font-weight:950}.of-cart-note{font-size:.78rem;color:#777;line-height:1.35;margin:10px 3px 0}
-    @media(max-width:650px){.of-cart-fab{right:13px;bottom:13px}}
+    @media(max-width:650px){.of-cart-fab{right:13px;bottom:13px}.of-promo-label{text-align:left}}
   `;
   document.head.appendChild(style);
 
@@ -145,6 +149,18 @@ document.addEventListener('DOMContentLoaded',async()=>{
         card.rel='noopener';
         card.setAttribute('aria-label',`Ver ${p.name}`);
         card.dataset.productId=p.id;
+
+        const desc=card.querySelector('.desc');
+        if(desc) desc.remove();
+
+        const price=card.querySelector('.price');
+        if(price && isPromo(p) && p.promo_label && !card.querySelector('.of-promo-label')){
+          const label=document.createElement('div');
+          label.className='of-promo-label';
+          label.textContent=p.promo_label;
+          price.insertAdjacentElement('afterend',label);
+        }
+
         const tags=card.querySelector('.tags');
         if(tags && !card.querySelector('.of-card-flags')){
           const flags=document.createElement('div');flags.className='of-card-flags';
