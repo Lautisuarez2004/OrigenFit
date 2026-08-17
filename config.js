@@ -11,6 +11,7 @@ document.write('<script src="admin-product-enhancements.js?v=20260816-3"><\/scri
 document.write('<script src="admin-combo-enhancements.js?v=20260816-1"><\/script>');
 document.write('<script src="product-experience.js?v=20260816-5"><\/script>');
 document.write('<script src="combo-experience.js?v=20260816-2"><\/script>');
+document.write('<script src="promo-price-fix.js?v=20260816-1"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
