@@ -20,6 +20,9 @@ document.write('<script src="catalog-status-badges.js?v=20260817-2"><\/script>')
 document.addEventListener('DOMContentLoaded',()=>{
   const style=document.createElement('style');
   style.textContent=`
+    /* Las descripciones largas viven sólo en las fichas individuales. */
+    .products .product-card-link .desc,.combos-grid .combo-card .combo-desc{display:none!important}
+
     /* Precios promocionales: siempre apilados, nunca superpuestos. */
     #priceBox{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:5px!important;margin:22px 0 5px!important;min-width:0!important}
     #priceBox .price{display:block!important;position:static!important;transform:none!important;margin:0!important;line-height:1.15!important}
