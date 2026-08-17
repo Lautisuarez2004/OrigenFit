@@ -1,4 +1,4 @@
-/* Origen Fit · tarjetas de producto uniformes + Más vendido como overlay */
+/* Origen Fit · tarjetas de producto uniformes + Más vendido como overlay + CTA estable */
 document.addEventListener('DOMContentLoaded',async()=>{
   const grid=document.getElementById('grid');
   if(!grid)return;
@@ -56,6 +56,18 @@ document.addEventListener('DOMContentLoaded',async()=>{
     .products #grid .product-card-link .of-add-cart{margin-top:auto!important}
     .products #grid .product-card-link .product-wa{margin-top:10px!important}
 
+    /* El CTA visible no depende de módulos anteriores que puedan escribir "Elegir sabor". */
+    .products #grid .product-card-link .of-product-add-cart:not(:disabled),
+    .products #grid .product-card-link .of-add-cart:not(:disabled){
+      position:relative!important;color:transparent!important;
+    }
+    .products #grid .product-card-link .of-product-add-cart:not(:disabled)::after,
+    .products #grid .product-card-link .of-add-cart:not(:disabled)::after{
+      content:"Agregar al carrito";
+      position:absolute;inset:0;display:grid;place-items:center;
+      color:#fff;font:inherit;font-weight:950;pointer-events:none;
+    }
+
     @media(max-width:650px){
       .products .product-card-link .of-featured-badge{left:9px;bottom:9px;min-height:24px;padding:5px 8px;font-size:.64rem;border-radius:4px}
       .products #grid .product-card-link .row{min-height:76px!important}
@@ -82,25 +94,36 @@ document.addEventListener('DOMContentLoaded',async()=>{
         }else badge?.remove();
       }
 
-      /* En portada el CTA siempre conserva el mismo texto. Si hay sabores, abre la ficha para elegirlos. */
       const btn=card.querySelector('.of-product-add-cart,.of-add-cart');
       if(btn){
         btn.disabled=Number(p.stock)<=0;
         btn.textContent=Number(p.stock)<=0?'Sin stock':'Agregar al carrito';
-        btn.onclick=e=>{
-          e.preventDefault();e.stopPropagation();
-          if(Number(p.stock)<=0)return;
-          if(hasFlavors(p)){
-            window.open(`producto.html?id=${encodeURIComponent(p.id)}`,'_blank','noopener');
-            return;
-          }
-          const cart=window.ORIGENFIT_CART;
-          if(cart?.addProduct)cart.addProduct(String(p.id),'');
-          else if(cart?.add)cart.add(String(p.id),'');
-        };
+        btn.setAttribute('aria-label',Number(p.stock)<=0?'Sin stock':hasFlavors(p)?'Agregar al carrito y elegir sabor':'Agregar al carrito');
       }
     });
   }
+
+  /*
+   * Único controlador efectivo del CTA de portada.
+   * Capture + stopImmediatePropagation evita dobles altas causadas por módulos anteriores.
+   */
+  grid.addEventListener('click',e=>{
+    const btn=e.target.closest?.('.of-product-add-cart,.of-add-cart');
+    if(!btn||!grid.contains(btn))return;
+    const card=btn.closest('.product-card-link');
+    const p=card&&identify(card);
+    if(!p)return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if(Number(p.stock)<=0)return;
+    if(hasFlavors(p)){
+      window.open(`producto.html?id=${encodeURIComponent(p.id)}`,'_blank','noopener');
+      return;
+    }
+    const cart=window.ORIGENFIT_CART;
+    if(cart?.addProduct)cart.addProduct(String(p.id),'');
+    else if(cart?.add)cart.add(String(p.id),'');
+  },true);
 
   let queued=false;
   const schedule=()=>{
