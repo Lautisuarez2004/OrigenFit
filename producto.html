@@ -30,7 +30,7 @@
   window.db=window.db||client;
   const id=new URLSearchParams(location.search).get('id');
   if(!id){$('loading').style.display='none';$('error').style.display='block';$('error').textContent='Producto no encontrado.';return;}
-  const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+  const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   try{
     const [{data:p,error:pe},{data:g,error:ge}]=await Promise.all([
       client.from('products').select('*').eq('id',id).eq('visible',true).single(),
