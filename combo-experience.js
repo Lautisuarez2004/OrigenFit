@@ -21,10 +21,18 @@ document.addEventListener('DOMContentLoaded',async()=>{
       }
       const wa=card.querySelector('.combo-wa');if(wa)wa.innerHTML='<span>Ver combo</span><span>→</span>';
       if(!card.querySelector('.of-combo-add-cart')){
-        const btn=document.createElement('button');btn.type='button';btn.className='of-add-cart of-combo-add-cart';btn.disabled=Number(c.stock)<=0;btn.textContent=Number(c.stock)>0?'Agregar al carrito':'Sin stock';btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();window.ORIGENFIT_CART?.addCombo(c.id);});(wa||card.querySelector('.combo-body'))?.insertAdjacentElement('beforebegin',btn);
+        const btn=document.createElement('button');
+        btn.type='button';
+        btn.className='of-add-cart of-combo-add-cart';
+        btn.disabled=Number(c.stock)<=0;
+        btn.textContent=Number(c.stock)>0?'Agregar al carrito':'Sin stock';
+        btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();window.ORIGENFIT_CART?.addCombo(c.id);});
+        (wa||card.querySelector('.combo-body'))?.insertAdjacentElement('beforebegin',btn);
       }
     });
   };
-  const style=document.createElement('style');style.textContent=`.combos-grid .combo-card .combo-desc{display:none!important}.of-combo-promo-label{font-size:.72rem;line-height:1.2;color:#777;font-weight:850;margin:6px 0 0;text-align:right}.combo-card .of-card-flags{margin:14px 0 0}.combo-card .of-add-cart{background:var(--red,#e30613)}@media(max-width:650px){.of-combo-promo-label{text-align:left}}`;document.head.appendChild(style);
+  const style=document.createElement('style');
+  style.textContent=`.combos-grid .combo-card .combo-desc{display:none!important}.of-combo-promo-label{font-size:.72rem;line-height:1.2;color:#777;font-weight:850;margin:6px 0 0;text-align:right}.combo-card .of-card-flags{margin:14px 0 0}@media(max-width:650px){.of-combo-promo-label{text-align:left}}`;
+  document.head.appendChild(style);
   new MutationObserver(()=>requestAnimationFrame(decorate)).observe(grid,{childList:true,subtree:true});decorate();
 });
