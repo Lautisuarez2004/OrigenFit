@@ -7,11 +7,26 @@ document.write('<script src="config-core.js?v=20260814-1"><\/script>');
 document.write('<script src="todos-special.js?v=20260814-1"><\/script>');
 document.write('<script src="promo-overlay.js?v=20260814-1"><\/script>');
 document.write('<script src="carousel-visibility-fix.js?v=20260814-2"><\/script>');
+document.write('<script src="admin-product-enhancements.js?v=20260816-3"><\/script>');
+document.write('<script src="admin-combo-enhancements.js?v=20260816-1"><\/script>');
+document.write('<script src="product-experience.js?v=20260816-5"><\/script>');
+document.write('<script src="combo-experience.js?v=20260816-2"><\/script>');
+document.write('<script src="promo-price-fix.js?v=20260816-1"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
   const style=document.createElement('style');
   style.textContent=`
+    /* Precios promocionales: siempre apilados, nunca superpuestos. */
+    #priceBox{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:5px!important;margin:22px 0 5px!important;min-width:0!important}
+    #priceBox .price{display:block!important;position:static!important;transform:none!important;margin:0!important;line-height:1.15!important}
+    #priceBox .old{display:block!important;position:static!important;transform:none!important;margin:0!important;line-height:1.2!important}
+    #priceBox .promo-label{display:block!important;position:static!important;transform:none!important;margin:2px 0 0!important;line-height:1.25!important}
+    .combo-price-row>div:last-child,.of-price-stack{display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:4px!important;min-width:max-content!important}
+    .combo-price,.combo-old-price,.of-price-stack .price,.of-old-price{position:static!important;transform:none!important;line-height:1.15!important;margin:0!important}
+    .combo-old-price,.of-old-price{display:block!important;color:#8b8d93!important;font-size:.82rem!important;font-weight:700!important;text-decoration:line-through!important;white-space:nowrap!important}
+    @media(max-width:650px){.of-price-stack{align-items:flex-start!important}}
+
     @media(max-width:650px){
       .promos{padding:18px 0!important}
       .promo-shell{width:100%!important;margin:0 auto!important}
