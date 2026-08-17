@@ -15,6 +15,7 @@ document.write('<script src="promo-price-fix.js?v=20260816-1"><\/script>');
 document.write('<script src="cart-rescue.js?v=20260817-1"><\/script>');
 document.write('<script src="product-cart-fix.js?v=20260817-3"><\/script>');
 document.write('<script src="catalog-status-badges.js?v=20260817-2"><\/script>');
+document.write('<script src="catalog-card-uniformity.js?v=20260817-1"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
