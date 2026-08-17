@@ -1,4 +1,4 @@
-/* Origen Fit · mejoras de producto para admin: envío gratis + galería */
+/* Origen Fit · mejoras de producto para admin: envío gratis + galería + texto promo */
 document.addEventListener('DOMContentLoaded',()=>{
   const $=id=>document.getElementById(id);
   const panel=$('productFormPanel');
@@ -9,6 +9,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     const label=document.createElement('label');
     label.innerHTML='<input id="pFreeShipping" type="checkbox"> Envío gratis';
     checks.appendChild(label);
+  }
+
+  const promoInput=$('pPromo');
+  if(promoInput && !$('pPromoLabel')){
+    const field=document.createElement('div');
+    field.className='field';
+    field.innerHTML='<label>Texto del precio promo <span class="muted" style="font-weight:600">(opcional)</span></label><input id="pPromoLabel" placeholder="Ej: Efectivo / transferencia">';
+    const promoRow=promoInput.closest('.two');
+    (promoRow||promoInput.closest('.field'))?.insertAdjacentElement('afterend',field);
   }
 
   const mainImageBox=panel.querySelector('.imagebox');
@@ -38,6 +47,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const galleryInput=$('pGalleryFiles');
   const galleryPreview=$('pGalleryPreview');
   const freeShipping=$('pFreeShipping');
+  const promoLabel=$('pPromoLabel');
 
   const escapeHtml=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const safeName=name=>String(name||'foto').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]+/g,'-').replace(/-+/g,'-').slice(-80);
@@ -59,17 +69,21 @@ document.addEventListener('DOMContentLoaded',()=>{
   async function loadEnhancements(){
     const id=$('productId')?.value;
     if(!id){
-      freeShipping.checked=false;
+      if(freeShipping) freeShipping.checked=false;
+      if(promoLabel) promoLabel.value='';
       currentGallery=[];
       if(galleryInput) galleryInput.value='';
       renderGallery();
       return;
     }
     const [{data:p,error:pe},{data:g,error:ge}]=await Promise.all([
-      db.from('products').select('free_shipping').eq('id',id).single(),
+      db.from('products').select('free_shipping,promo_label').eq('id',id).single(),
       db.from('product_images').select('id,image_url,storage_path,sort_order').eq('product_id',id).order('sort_order').order('created_at')
     ]);
-    if(!pe) freeShipping.checked=!!p?.free_shipping;
+    if(!pe){
+      if(freeShipping) freeShipping.checked=!!p?.free_shipping;
+      if(promoLabel) promoLabel.value=p?.promo_label||'';
+    }
     if(!ge) currentGallery=g||[];
     if(galleryInput) galleryInput.value='';
     renderGallery();
@@ -111,6 +125,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   $('pSave')?.addEventListener('click',async()=>{
     const desiredFreeShipping=!!freeShipping?.checked;
+    const desiredPromoLabel=promoLabel?.value.trim()||'';
     const pending=[...(galleryInput?.files||[])];
     const outcome=await waitForCoreSave();
     if(outcome.err || !/guardado correctamente/i.test(outcome.ok)) return;
@@ -118,7 +133,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(!productId) return;
 
     try{
-      const {error:updateError}=await db.from('products').update({free_shipping:desiredFreeShipping}).eq('id',productId);
+      const {error:updateError}=await db.from('products').update({
+        free_shipping:desiredFreeShipping,
+        promo_label:desiredPromoLabel
+      }).eq('id',productId);
       if(updateError) throw updateError;
 
       let sort=currentGallery.reduce((m,x)=>Math.max(m,Number(x.sort_order||0)),0)+1;
@@ -139,10 +157,10 @@ document.addEventListener('DOMContentLoaded',()=>{
           throw insertError;
         }
       }
-      if($('pOk')) $('pOk').textContent='✓ Producto, envío y galería guardados.';
+      if($('pOk')) $('pOk').textContent='✓ Producto, opciones y galería guardados.';
       await loadEnhancements();
     }catch(err){
-      if($('pErr')) $('pErr').textContent='Producto guardado, pero faltó completar envío/galería: '+(err.message||err);
+      if($('pErr')) $('pErr').textContent='Producto guardado, pero faltó completar opciones/galería: '+(err.message||err);
     }
   });
 
