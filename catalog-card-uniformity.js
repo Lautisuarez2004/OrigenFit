@@ -117,7 +117,12 @@ document.addEventListener('DOMContentLoaded',async()=>{
     e.stopImmediatePropagation();
     if(Number(p.stock)<=0)return;
     if(hasFlavors(p)){
-      window.open(`producto.html?id=${encodeURIComponent(p.id)}`,'_blank','noopener');
+      const picker=window.ORIGENFIT_FLAVOR_CART;
+      if(picker?.choose){
+        picker.choose({type:'product',id:String(p.id),name:p.name,flavors:p.flavors,flavorLabel:'Sabor'});
+      }else{
+        window.open(`producto.html?id=${encodeURIComponent(p.id)}`,'_blank','noopener');
+      }
       return;
     }
     const cart=window.ORIGENFIT_CART;
