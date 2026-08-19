@@ -3,16 +3,18 @@ window.ORIGENFIT_CONFIG={
   supabaseKey:"sb_publishable_htQd5YCWT6cGgzicfKg-Ww_QsSin_Xz"
 };
 /* Carga sincrónica de las mejoras acumuladas + extensiones especiales. */
+/* Debe cargarse primero: protege get_products_page antes de crear el cliente Supabase del catálogo. */
+document.write('<script src="catalog-request-guard.js?v=20260818-1"><\/script>');
 document.write('<script src="config-core.js?v=20260814-1"><\/script>');
 document.write('<script src="todos-special.js?v=20260814-1"><\/script>');
 document.write('<script src="promo-overlay.js?v=20260814-1"><\/script>');
 document.write('<script src="carousel-visibility-fix.js?v=20260814-2"><\/script>');
 document.write('<script src="admin-product-enhancements.js?v=20260817-1"><\/script>');
 document.write('<script src="admin-combo-enhancements.js?v=20260817-1"><\/script>');
-document.write('<script src="product-experience.js?v=20260817-3"><\/script>');
+/* product-experience es la única fuente de verdad del carrito (Productos + Combos + sabores). */
+document.write('<script src="product-experience.js?v=20260818-1"><\/script>');
 document.write('<script src="combo-experience.js?v=20260817-1"><\/script>');
 document.write('<script src="promo-price-fix.js?v=20260816-1"><\/script>');
-document.write('<script src="cart-rescue.js?v=20260817-1"><\/script>');
 document.write('<script src="product-cart-fix.js?v=20260817-4"><\/script>');
 document.write('<script src="catalog-status-badges.js?v=20260817-3"><\/script>');
 document.write('<script src="catalog-card-uniformity.js?v=20260817-2"><\/script>');
