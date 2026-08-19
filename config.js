@@ -13,7 +13,7 @@ document.write('<script src="admin-product-enhancements.js?v=20260817-1"><\/scri
 document.write('<script src="admin-combo-enhancements.js?v=20260817-1"><\/script>');
 /* product-experience es la única fuente de verdad del carrito (Productos + Combos + sabores). */
 document.write('<script src="product-experience.js?v=20260818-1"><\/script>');
-document.write('<script src="cart-back-sync.js?v=20260819-2"><\/script>');
+document.write('<script src="cart-back-sync.js?v=20260819-3"><\/script>');
 /* Selector de variantes: sólo actúa cuando Usar sabores está habilitado. */
 document.write('<script src="flavor-cart-picker.js?v=20260819-1"><\/script>');
 document.write('<script src="cart-checkout-label.js?v=20260818-1"><\/script>');
