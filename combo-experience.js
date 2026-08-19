@@ -21,6 +21,16 @@ document.addEventListener('DOMContentLoaded',async()=>{
     .combos-grid .combo-card .of-combo-add-cart,.combos-grid .combo-card .of-add-cart{margin-top:auto!important}
     .combos-grid .combo-card .combo-wa{margin-top:10px!important}
     .of-combo-promo-label{display:none!important}
+
+    /* CTA estable: cualquier combo con stock siempre se ve como Agregar al carrito. */
+    .combos-grid .combo-card .of-combo-add-cart:not(:disabled),
+    .combos-grid .combo-card .of-add-cart:not(:disabled){position:relative!important;color:transparent!important}
+    .combos-grid .combo-card .of-combo-add-cart:not(:disabled)::after,
+    .combos-grid .combo-card .of-add-cart:not(:disabled)::after{
+      content:"Agregar al carrito";position:absolute;inset:0;display:grid;place-items:center;
+      color:#fff;font:inherit;font-weight:950;pointer-events:none;
+    }
+
     @media(max-width:650px){.combos-grid .combo-card .combo-price-row{min-height:76px!important}}
   `;document.head.appendChild(style);
 
@@ -44,9 +54,18 @@ document.addEventListener('DOMContentLoaded',async()=>{
       }
       btn.disabled=Number(c.stock)<=0;
       btn.textContent=Number(c.stock)>0?'Agregar al carrito':'Sin stock';
+      btn.setAttribute('aria-label',Number(c.stock)<=0?'Sin stock':hasFlavors(c)?'Agregar al carrito y elegir sabor':'Agregar al carrito');
       btn.onclick=e=>{
         e.preventDefault();e.stopPropagation();if(Number(c.stock)<=0)return;
-        if(hasFlavors(c)){window.open(card.href,'_blank','noopener');return;}
+        if(hasFlavors(c)){
+          const picker=window.ORIGENFIT_FLAVOR_CART;
+          if(picker?.choose){
+            picker.choose({type:'combo',id:String(c.id),name:c.name,flavors:c.flavors,flavorLabel:c.flavor_product_label||'Sabor'});
+          }else{
+            window.open(card.href,'_blank','noopener');
+          }
+          return;
+        }
         const cart=window.ORIGENFIT_CART;if(cart?.addCombo)cart.addCombo(String(c.id),'');
       };
     });
