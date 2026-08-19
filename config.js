@@ -13,6 +13,7 @@ document.write('<script src="admin-product-enhancements.js?v=20260817-1"><\/scri
 document.write('<script src="admin-combo-enhancements.js?v=20260817-1"><\/script>');
 /* product-experience es la única fuente de verdad del carrito (Productos + Combos + sabores). */
 document.write('<script src="product-experience.js?v=20260818-1"><\/script>');
+document.write('<script src="cart-checkout-label.js?v=20260818-1"><\/script>');
 document.write('<script src="combo-experience.js?v=20260817-1"><\/script>');
 document.write('<script src="promo-price-fix.js?v=20260816-1"><\/script>');
 document.write('<script src="product-cart-fix.js?v=20260817-4"><\/script>');
