@@ -35,7 +35,15 @@ document.addEventListener('DOMContentLoaded',async()=>{
       btn.textContent=Number(p.stock)<=0?'Sin stock':'Agregar al carrito';
       btn.onclick=e=>{
         e.preventDefault();e.stopPropagation();if(Number(p.stock)<=0)return;
-        if(needsChoice){window.open(card.href,'_blank','noopener');return;}
+        if(needsChoice){
+          const picker=window.ORIGENFIT_FLAVOR_CART;
+          if(picker?.choose){
+            picker.choose({type:'product',id:String(p.id),name:p.name,flavors:p.flavors,flavorLabel:'Sabor'});
+          }else{
+            window.open(card.href,'_blank','noopener');
+          }
+          return;
+        }
         const cart=window.ORIGENFIT_CART;if(cart?.addProduct)cart.addProduct(String(p.id),'');else if(cart?.add)cart.add(String(p.id),'');
       };
     });
