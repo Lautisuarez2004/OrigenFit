@@ -75,3 +75,5 @@ document.addEventListener('DOMContentLoaded',()=>{
     },true);
   }
 });
+
+/* Netlify branch deploy trigger · 2026-08-18 */
