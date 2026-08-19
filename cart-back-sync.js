@@ -1,27 +1,30 @@
-/* Origen Fit · sincroniza el carrito al volver con la navegación Atrás/Adelante del navegador. */
+/* Origen Fit · sincroniza el carrito al volver con Atrás/Adelante, incluso con BFCache de Safari/iPhone. */
 (()=>{
   const CART_KEY='origenfit-cart-v1';
-  const savedCount=()=>{
-    try{
-      const cart=JSON.parse(localStorage.getItem(CART_KEY)||'[]');
-      return Array.isArray(cart)?cart.reduce((sum,item)=>sum+(Number(item?.quantity)||0),0):0;
-    }catch(_){return 0;}
+  const isStore=()=>!!document.getElementById('grid')||!!document.getElementById('comboGrid');
+  if(!isStore())return;
+
+  const signature=()=>localStorage.getItem(CART_KEY)||'[]';
+  let snapshot=signature();
+  let reloading=false;
+
+  const remember=()=>{snapshot=signature();};
+  const syncIfChanged=()=>{
+    if(reloading)return;
+    const current=signature();
+    if(current===snapshot)return;
+    reloading=true;
+    location.reload();
   };
 
-  window.addEventListener('pageshow',event=>{
-    const nav=performance.getEntriesByType?.('navigation')?.[0];
-    const fromHistory=!!event.persisted||nav?.type==='back_forward';
-    if(!fromHistory)return;
-
-    /* Sólo importa en la tienda/listados, que son los que pueden volver desde BFCache con el carrito viejo. */
-    if(!document.getElementById('grid')&&!document.getElementById('comboGrid'))return;
-
-    setTimeout(()=>{
-      const badge=document.getElementById('ofCartCount');
-      if(!badge)return;
-      const shown=Number(String(badge.textContent||'0').trim())||0;
-      const saved=savedCount();
-      if(shown!==saved)location.reload();
-    },120);
+  /* Antes de abandonar/congelar la tienda guardamos el estado que estaba mostrando. */
+  window.addEventListener('pagehide',remember,{capture:true});
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='hidden')remember();
+    else if(document.visibilityState==='visible')setTimeout(syncIfChanged,0);
   });
+
+  /* Al volver desde una ficha, Safari puede restaurar la página desde BFCache sin reconstruir el JS. */
+  window.addEventListener('pageshow',()=>setTimeout(syncIfChanged,0));
+  window.addEventListener('focus',()=>setTimeout(syncIfChanged,0));
 })();
