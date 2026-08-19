@@ -16,6 +16,7 @@ document.write('<script src="product-experience.js?v=20260818-1"><\/script>');
 /* Selector de variantes: sólo actúa cuando Usar sabores está habilitado. */
 document.write('<script src="flavor-cart-picker.js?v=20260819-1"><\/script>');
 document.write('<script src="cart-checkout-label.js?v=20260818-1"><\/script>');
+document.write('<script src="cart-continue-shopping.js?v=20260819-1"><\/script>');
 document.write('<script src="combo-experience.js?v=20260819-2"><\/script>');
 document.write('<script src="promo-price-fix.js?v=20260816-1"><\/script>');
 document.write('<script src="product-cart-fix.js?v=20260819-1"><\/script>');
