@@ -18,9 +18,37 @@ document.addEventListener('DOMContentLoaded',async()=>{
     .combos-grid .combo-card .combo-body{display:flex!important;flex-direction:column!important;flex:1 1 auto!important;min-height:0!important}
     .combos-grid .combo-card .combo-desc{display:none!important}
     .combos-grid .combo-card .combo-price-row{min-height:82px!important;align-items:flex-start!important}
-    .combos-grid .combo-card .of-combo-add-cart,.combos-grid .combo-card .of-add-cart{margin-top:auto!important}
     .combos-grid .combo-card .combo-wa{margin-top:10px!important}
     .of-combo-promo-label{display:none!important}
+
+    /* Mismo CTA que Productos: ancho completo, negro, redondeado y altura estable. */
+    .combos-grid .combo-card .of-combo-add-cart,
+    .combos-grid .combo-card .of-add-cart{
+      display:block!important;
+      width:100%!important;
+      min-height:46px!important;
+      border:0!important;
+      border-radius:999px!important;
+      padding:11px 14px!important;
+      margin-top:auto!important;
+      background:#111!important;
+      color:#fff!important;
+      font-weight:950!important;
+      font-size:1rem!important;
+      line-height:1.2!important;
+      cursor:pointer!important;
+      appearance:none!important;
+      -webkit-appearance:none!important;
+      opacity:1!important;
+      box-shadow:none!important;
+    }
+    .combos-grid .combo-card .of-combo-add-cart:disabled,
+    .combos-grid .combo-card .of-add-cart:disabled{
+      background:#d9d9dd!important;
+      color:#777!important;
+      cursor:not-allowed!important;
+      opacity:1!important;
+    }
 
     /* CTA estable: cualquier combo con stock siempre se ve como Agregar al carrito. */
     .combos-grid .combo-card .of-combo-add-cart:not(:disabled),
