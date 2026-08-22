@@ -6,7 +6,6 @@ window.ORIGENFIT_CONFIG={
 /* Debe cargarse primero: protege get_products_page antes de crear el cliente Supabase del catálogo. */
 document.write('<script src="catalog-request-guard.js?v=20260818-1"><\/script>');
 document.write('<script src="config-core.js?v=20260814-1"><\/script>');
-document.write('<script src="category-image-fit.js?v=20260821-1"><\/script>');
 document.write('<script src="todos-special.js?v=20260814-1"><\/script>');
 document.write('<script src="promo-overlay.js?v=20260814-1"><\/script>');
 document.write('<script src="carousel-visibility-fix.js?v=20260814-2"><\/script>');
