@@ -9,6 +9,7 @@ document.write('<script src="config-core.js?v=20260814-1"><\/script>');
 document.write('<script src="todos-special.js?v=20260814-1"><\/script>');
 document.write('<script src="promo-overlay.js?v=20260814-1"><\/script>');
 document.write('<script src="carousel-visibility-fix.js?v=20260814-2"><\/script>');
+document.write('<script src="product-carousel-navigation-fix.js?v=20260910-1"><\/script>');
 document.write('<script src="admin-product-enhancements.js?v=20260817-1"><\/script>');
 document.write('<script src="admin-combo-enhancements.js?v=20260817-1"><\/script>');
 /* product-experience es la única fuente de verdad del carrito (Productos + Combos + sabores). */
