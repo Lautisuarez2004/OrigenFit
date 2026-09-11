@@ -8,8 +8,6 @@ document.write('<script src="catalog-request-guard.js?v=20260818-1"><\/script>')
 document.write('<script src="config-core.js?v=20260814-1"><\/script>');
 document.write('<script src="todos-special.js?v=20260814-1"><\/script>');
 document.write('<script src="promo-overlay.js?v=20260814-1"><\/script>');
-document.write('<script src="carousel-visibility-fix.js?v=20260814-2"><\/script>');
-document.write('<script src="product-carousel-navigation-fix.js?v=20260910-1"><\/script>');
 document.write('<script src="admin-product-enhancements.js?v=20260817-1"><\/script>');
 document.write('<script src="admin-combo-enhancements.js?v=20260817-1"><\/script>');
 /* product-experience es la única fuente de verdad del carrito (Productos + Combos + sabores). */
@@ -20,12 +18,13 @@ document.write('<script src="flavor-cart-picker.js?v=20260819-1"><\/script>');
 document.write('<script src="cart-checkout-label.js?v=20260818-1"><\/script>');
 document.write('<script src="cart-continue-shopping.js?v=20260819-1"><\/script>');
 document.write('<script src="combo-experience.js?v=20260819-2"><\/script>');
-document.write('<script src="combo-carousel-enhancement.js?v=20260910-3"><\/script>');
 document.write('<script src="promo-price-fix.js?v=20260816-1"><\/script>');
 document.write('<script src="product-cart-fix.js?v=20260819-1"><\/script>');
 document.write('<script src="catalog-status-badges.js?v=20260817-3"><\/script>');
 document.write('<script src="catalog-card-uniformity.js?v=20260819-1"><\/script>');
 document.write('<script src="catalog-text-layout-fix.js?v=20260817-4"><\/script>');
+/* Una sola lógica de carruseles: swipe/drag primero, flechas como apoyo. */
+document.write('<script src="touch-carousels.js?v=20260911-1"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
