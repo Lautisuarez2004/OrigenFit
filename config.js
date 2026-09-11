@@ -31,6 +31,8 @@ document.write('<script src="touch-carousels.js?v=20260911-2"><\/script>');
 document.write('<script src="brands-section.js?v=20260911-2"><\/script>');
 /* Orden comercial de la home: mueve secciones completas y conserva el ancla de Productos. */
 document.write('<script src="section-order.js?v=20260911-2"><\/script>');
+/* Header aprobado: ORIGENFIT negro/rojo sobre fondo blanco. */
+document.write('<script src="brand-header.js?v=20260911-3"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
