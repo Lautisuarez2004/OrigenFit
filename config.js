@@ -8,6 +8,8 @@ document.write('<script src="catalog-request-guard.js?v=20260818-1"><\/script>')
 document.write('<script src="config-core.js?v=20260814-1"><\/script>');
 document.write('<script src="todos-special.js?v=20260814-1"><\/script>');
 document.write('<script src="promo-overlay.js?v=20260814-1"><\/script>');
+/* Categorías conserva su layout aprobado; touch-carousels sólo agrega el gesto de swipe. */
+document.write('<script src="carousel-visibility-fix.js?v=20260814-2"><\/script>');
 document.write('<script src="admin-product-enhancements.js?v=20260817-1"><\/script>');
 document.write('<script src="admin-combo-enhancements.js?v=20260817-1"><\/script>');
 /* product-experience es la única fuente de verdad del carrito (Productos + Combos + sabores). */
@@ -23,8 +25,8 @@ document.write('<script src="product-cart-fix.js?v=20260819-1"><\/script>');
 document.write('<script src="catalog-status-badges.js?v=20260817-3"><\/script>');
 document.write('<script src="catalog-card-uniformity.js?v=20260819-1"><\/script>');
 document.write('<script src="catalog-text-layout-fix.js?v=20260817-4"><\/script>');
-/* Una sola lógica de carruseles: swipe/drag primero, flechas como apoyo. */
-document.write('<script src="touch-carousels.js?v=20260911-1"><\/script>');
+/* Una sola lógica para swipe de Productos/Combos/Promos + gesto táctil en Categorías. */
+document.write('<script src="touch-carousels.js?v=20260911-2"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
