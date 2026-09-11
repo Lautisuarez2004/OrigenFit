@@ -29,6 +29,8 @@ document.write('<script src="catalog-text-layout-fix.js?v=20260817-4"><\/script>
 document.write('<script src="touch-carousels.js?v=20260911-2"><\/script>');
 /* Sección adicional inspirada en Panther: Nuestras marcas. */
 document.write('<script src="brands-section.js?v=20260911-2"><\/script>');
+/* Orden comercial de la home: Hero → Combos → Categorías → Productos → cierre educativo. */
+document.write('<script src="section-order.js?v=20260911-1"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
