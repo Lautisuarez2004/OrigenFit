@@ -1,6 +1,7 @@
 /* Origen Fit · sección "Nuestras marcas" inspirada en Panther.
  * Se inserta después de Categorías y usa las marcas reales del catálogo.
- * Swipe táctil nativo + flechas como apoyo. No toca Productos, Combos, Categorías ni Promos.
+ * Logos visuales + nombre, swipe táctil nativo + flechas como apoyo.
+ * No toca Productos, Combos, Categorías ni Promos.
  */
 document.addEventListener('DOMContentLoaded',async()=>{
   const categoryGrid=document.getElementById('categoriesGrid');
@@ -17,10 +18,11 @@ document.addEventListener('DOMContentLoaded',async()=>{
     #marcas .of-brands-shell{position:relative;padding:0 46px}
     #marcas .of-brands-track{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scroll-behavior:smooth;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px 2px 12px}
     #marcas .of-brands-track::-webkit-scrollbar{display:none}
-    #marcas .of-brand-card{flex:0 0 calc((100% - 70px)/6);min-width:145px;height:108px;scroll-snap-align:start;border:1px solid var(--line,#e7e7e9);border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;padding:14px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.055)}
-    #marcas .of-brand-wordmark{font-size:1rem;line-height:1.05;font-weight:950;letter-spacing:-.025em;text-transform:uppercase;color:#171719}
-    #marcas .of-brand-card:nth-child(3n+2) .of-brand-wordmark{font-style:italic;letter-spacing:-.045em}
-    #marcas .of-brand-card:nth-child(4n) .of-brand-wordmark{letter-spacing:.02em}
+    #marcas .of-brand-card{flex:0 0 calc((100% - 70px)/6);min-width:145px;height:132px;scroll-snap-align:start;border:1px solid var(--line,#e7e7e9);border-radius:18px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:13px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.055)}
+    #marcas .of-brand-logo-wrap{width:100%;height:70px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    #marcas .of-brand-logo{display:block;max-width:88px;max-height:64px;width:auto;height:auto;object-fit:contain;filter:none}
+    #marcas .of-brand-fallback{width:62px;height:62px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font-size:1rem;font-weight:950;letter-spacing:-.03em;text-transform:uppercase}
+    #marcas .of-brand-name{font-size:.78rem;line-height:1.05;font-weight:850;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
     #marcas .of-brand-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:36px;height:48px;border:0;border-radius:12px;background:#111;color:#fff;display:grid;place-items:center;font-size:1.75rem;font-weight:900;box-shadow:0 7px 18px rgba(0,0,0,.16);touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
     #marcas .of-brand-arrow.prev{left:0}#marcas .of-brand-arrow.next{right:0}
     #marcas .of-brand-arrow:disabled{opacity:.2;cursor:default}
@@ -30,8 +32,11 @@ document.addEventListener('DOMContentLoaded',async()=>{
       #marcas .of-brands-head{margin-bottom:16px}
       #marcas .of-brands-shell{padding:0}
       #marcas .of-brands-track{gap:9px;padding:3px 18px 10px;scroll-padding-inline:18px}
-      #marcas .of-brand-card{flex:0 0 30%;min-width:104px;height:82px;border-radius:14px;padding:9px}
-      #marcas .of-brand-wordmark{font-size:.77rem}
+      #marcas .of-brand-card{flex:0 0 31%;min-width:108px;height:108px;border-radius:14px;padding:8px;gap:6px}
+      #marcas .of-brand-logo-wrap{height:64px}
+      #marcas .of-brand-logo{max-width:74px;max-height:58px}
+      #marcas .of-brand-fallback{width:54px;height:54px;font-size:.9rem}
+      #marcas .of-brand-name{font-size:.66rem}
       #marcas .of-brand-arrow{width:31px;height:42px;border-radius:0;background:rgba(17,17,17,.72);box-shadow:none;font-size:1.6rem}
       #marcas .of-brand-arrow.prev{left:2px}#marcas .of-brand-arrow.next{right:2px}
     }
@@ -77,6 +82,27 @@ document.addEventListener('DOMContentLoaded',async()=>{
     return aliases[clean.toLowerCase()]||clean;
   };
 
+  /* Los sitios oficiales se usan para obtener un ícono/logo de marca confiable.
+   * Si alguno no responde, queda un fallback con iniciales y nunca se rompe la tarjeta.
+   */
+  const logoDomains={
+    'Star Nutrition':'starnutrition.com.ar',
+    'ENA Sport':'enasport.com',
+    'Gentech':'gentech.com.ar',
+    'Gold Nutrition':'goldnutrition.com.ar',
+    'Body Advance':'bodyadvancenutrition.com',
+    'Age Biologique':'age-biologique.com',
+    'Gomex Nutrition':'gomexargentina.com',
+    'Granger Nutrition':'grangernutricion.com',
+    'Mervick':'mervick.com.ar'
+  };
+  const logoUrl=brand=>{
+    const domain=logoDomains[brand];
+    return domain?`https://www.google.com/s2/favicons?domain_url=https://${domain}&sz=256`:'';
+  };
+  const initials=brand=>brand.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+  const esc=value=>String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
   let brands=fallback;
   try{
     if(typeof db!=='undefined'){
@@ -90,7 +116,13 @@ document.addEventListener('DOMContentLoaded',async()=>{
 
   const track=document.getElementById('brandsTrack');
   if(!track)return;
-  track.innerHTML=brands.map(brand=>`<div class="of-brand-card"><span class="of-brand-wordmark">${brand.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span></div>`).join('');
+  track.innerHTML=brands.map(brand=>{
+    const src=logoUrl(brand);
+    const visual=src
+      ?`<img class="of-brand-logo" src="${esc(src)}" alt="Logo ${esc(brand)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">\n         <span class="of-brand-fallback" style="display:none">${esc(initials(brand))}</span>`
+      :`<span class="of-brand-fallback">${esc(initials(brand))}</span>`;
+    return `<div class="of-brand-card" aria-label="${esc(brand)}"><div class="of-brand-logo-wrap">${visual}</div><div class="of-brand-name">${esc(brand)}</div></div>`;
+  }).join('');
 
   const prev=section.querySelector('.of-brand-arrow.prev');
   const next=section.querySelector('.of-brand-arrow.next');
