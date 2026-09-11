@@ -27,6 +27,8 @@ document.write('<script src="catalog-card-uniformity.js?v=20260819-1"><\/script>
 document.write('<script src="catalog-text-layout-fix.js?v=20260817-4"><\/script>');
 /* Una sola lógica para swipe de Productos/Combos/Promos + gesto táctil en Categorías. */
 document.write('<script src="touch-carousels.js?v=20260911-2"><\/script>');
+/* Sección adicional inspirada en Panther: Nuestras marcas. */
+document.write('<script src="brands-section.js?v=20260911-1"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
