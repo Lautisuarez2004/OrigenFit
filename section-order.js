@@ -1,37 +1,39 @@
 /* Origen Fit · orden comercial de secciones.
- * Mantiene intactos diseño y contenido; sólo cambia la posición en la home.
- * Flujo principal: Hero → Combos → Categorías → Productos → Marcas/Promos → Suplementación.
+ * Mueve secciones completas; nunca separa el grid de Productos de su contenedor.
+ * Flujo: Hero → Combos → Categorías → Productos → Marcas → Promos → cierre.
  */
 document.addEventListener('DOMContentLoaded',()=>{
+  const style=document.createElement('style');
+  style.id='of-section-order-style';
+  style.textContent=`
+    /* Productos vuelve a la estructura blanca original: fichas directas, sin cabecera roja. */
+    #productos.products-section{background:#fff!important;padding:0 0 74px!important}
+    #productos .section-head,#productos #pagination,#productos #resultsMeta{display:none!important}
+    #productos>.c{padding-top:0!important}
+    #productos .of-product-carousel{margin-top:0!important}
+    #productos #loading{color:#555!important;background:#f7f7f8!important;border:1px solid #e7e7e9!important}
+    @media(max-width:650px){#productos.products-section{padding:0 0 54px!important}}
+  `;
+  document.head.appendChild(style);
+
   const reorder=()=>{
     const hero=document.querySelector('.hero');
-    const combos=document.querySelector('.combos-section');
-    const categories=document.querySelector('.categories-section');
-    const products=document.querySelector('.products');
+    const combos=document.getElementById('combos');
+    const categories=document.getElementById('categorias');
+    const productsSection=document.getElementById('productos');
     const brands=document.getElementById('marcas');
-    const promos=document.querySelector('.promos');
-    const footer=document.querySelector('footer');
+    const promos=document.getElementById('promos');
 
-    const supplementHeading=[...document.querySelectorAll('h2,h3')].find(el=>/suplement/i.test(el.textContent||''));
-    const supplement=supplementHeading?.closest('section');
+    if(!hero||!combos||!categories||!productsSection)return;
 
-    if(!hero||!combos||!categories||!products)return;
-
-    /* Recorrido de venta pedido: propuesta → oferta → exploración → catálogo. */
+    /* Se mueven contenedores completos para preservar carrusel, anclas y filtros. */
     hero.after(combos);
     combos.after(categories);
-    categories.after(products);
+    categories.after(productsSection);
 
-    /* Elementos secundarios quedan después del catálogo, sin cortar el recorrido principal. */
-    let tail=products;
-    if(brands&&brands!==supplement){tail.after(brands);tail=brands;}
-    if(promos&&promos!==supplement){tail.after(promos);tail=promos;}
-
-    /* La sección educativa queda última antes del footer. */
-    if(supplement){
-      if(footer)footer.before(supplement);
-      else tail.after(supplement);
-    }
+    let tail=productsSection;
+    if(brands){tail.after(brands);tail=brands;}
+    if(promos){tail.after(promos);tail=promos;}
   };
 
   requestAnimationFrame(reorder);
