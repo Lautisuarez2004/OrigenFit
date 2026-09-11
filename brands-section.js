@@ -25,11 +25,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
     #marcas .of-brand-logo{display:block;max-width:102px;max-height:66px;width:auto;height:auto;object-fit:contain}
     #marcas .of-brand-wordmark-logo{width:100%;height:66px;display:flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:12px;background:#fff;color:#111;font-size:.92rem;line-height:.95;font-weight:950;letter-spacing:-.045em;text-transform:uppercase;text-align:center}
     #marcas .of-brand-wordmark-logo[data-brand="Star Nutrition"]{font-style:italic;color:#111;border-bottom:4px solid #e30613}
-    #marcas .of-brand-wordmark-logo[data-brand="One Fit"]{font-style:italic;letter-spacing:.04em;border:2px solid #111}
     #marcas .of-brand-wordmark-logo[data-brand="ENA Sport"]{font-style:italic;color:#e30613;font-size:1.18rem}
     #marcas .of-brand-wordmark-logo[data-brand="Gold Nutrition"]{color:#a88418;font-family:Georgia,serif;letter-spacing:.02em}
-    #marcas .of-brand-wordmark-logo[data-brand="Body Advance"]{border-left:5px solid #e30613}
-    #marcas .of-brand-wordmark-logo[data-brand="Gentech"]{font-style:italic;font-size:1.08rem}
     #marcas .of-brand-wordmark-logo[data-brand="Age Biologique"]{font-family:Georgia,serif;font-weight:700;letter-spacing:.01em;text-transform:none}
     #marcas .of-brand-wordmark-logo[data-brand="Gomex Nutrition"]{background:#111;color:#fff;letter-spacing:.03em}
     #marcas .of-brand-wordmark-logo[data-brand="Granger Nutrition"]{border-bottom:4px solid #111;letter-spacing:.01em}
@@ -61,7 +58,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
   section.innerHTML=`<div class="c"><div class="of-brands-head"><div><div class="of-brands-kicker">Origen Fit</div><h2>Nuestras marcas</h2></div></div><div class="of-brands-shell"><button class="of-brand-arrow prev" type="button" aria-label="Marcas anteriores">‹</button><div class="of-brands-track" id="brandsTrack" aria-label="Marcas disponibles"></div><button class="of-brand-arrow next" type="button" aria-label="Marcas siguientes">›</button></div></div>`;
   anchor.insertAdjacentElement('afterend',section);
 
-  const fallback=['Star Nutrition','One Fit','ENA Sport','Gold Nutrition','Body Advance','Gentech','Age Biologique','Gomex Nutrition','Granger Nutrition','Mervick'];
+  const fallback=['Star Nutrition','ENA Sport','Gold Nutrition','Age Biologique','Gomex Nutrition','Granger Nutrition','Mervick'];
+  const excludedBrands=new Set(['Body Advance','Gentech','One Fit']);
   const aliases={'star nurition':'Star Nutrition','star nutrition':'Star Nutrition','gold nutriton':'Gold Nutrition','gold nutrition':'Gold Nutrition','one fit':'One Fit','ena sport':'ENA Sport','body advance':'Body Advance','gentech':'Gentech','age biologique':'Age Biologique','gomex nutrition':'Gomex Nutrition','granger nutrition':'Granger Nutrition','mervick':'Mervick'};
   const normalize=value=>{const clean=String(value||'').trim().replace(/\s+/g,' ');return clean?(aliases[clean.toLowerCase()]||clean):'';};
   const esc=value=>String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -70,8 +68,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
     'Star Nutrition':'starnutrition.com.ar',
     'ENA Sport':'enasport.com',
     'Gold Nutrition':'goldnutrition.com.ar',
-    'Body Advance':'bodyadvancenutrition.com',
-    'Gentech':'gentech.com.ar',
     'Age Biologique':'age-biologique.com',
     'Gomex Nutrition':'gomexargentina.com',
     'Granger Nutrition':'grangernutricion.com',
@@ -96,6 +92,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
       }
     }
   }catch(err){console.warn('Nuestras marcas:',err?.message||err);}
+
+  brands=brands.filter(brand=>!excludedBrands.has(brand));
 
   const track=document.getElementById('brandsTrack');
   if(!track)return;
