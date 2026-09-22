@@ -11,11 +11,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   const style=document.createElement('style');
   style.id='of-hero-offer-style';
   style.textContent=`
-    /* Hero limpio: sin nubes/gradientes detrás del producto. */
-    .hero{
-      background:#fff!important;
-    }
-
     .hero-grid{
       align-items:start!important;
     }
@@ -25,7 +20,9 @@ document.addEventListener('DOMContentLoaded',()=>{
       display:flex!important;
       align-items:flex-start!important;
       justify-content:flex-end!important;
-      padding-top:0;
+      padding-top:0!important;
+      position:relative!important;
+      z-index:5!important;
     }
 
     .of-hero-deal{
@@ -81,17 +78,43 @@ document.addEventListener('DOMContentLoaded',()=>{
       justify-content:center;
       padding:0;
       overflow:visible;
+      position:relative;
+      isolation:isolate;
+      z-index:4;
+    }
+
+    /* Esta capa queda DEBAJO del producto: tapa las nubes sólo en su zona
+       con un degradado suave, sin generar un recuadro blanco. */
+    .of-hero-deal-art:before{
+      content:"";
+      position:absolute;
+      z-index:0;
+      left:50%;
+      top:50%;
+      width:92%;
+      height:94%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:radial-gradient(ellipse at center,
+        rgba(255,255,255,1) 0%,
+        rgba(255,255,255,1) 67%,
+        rgba(255,255,255,.96) 76%,
+        rgba(255,255,255,.72) 86%,
+        rgba(255,255,255,0) 100%);
+      pointer-events:none;
     }
 
     .of-hero-deal-art img{
+      position:relative;
+      z-index:3;
       display:block;
       width:100%;
       height:100%;
       object-fit:contain;
       object-position:center;
       background:transparent!important;
-      mix-blend-mode:multiply;
-      filter:brightness(1.045) contrast(1.06) saturate(1.03) drop-shadow(0 18px 18px rgba(0,0,0,.13));
+      mix-blend-mode:normal!important;
+      filter:brightness(1.025) contrast(1.045) saturate(1.03) drop-shadow(0 18px 18px rgba(0,0,0,.13));
     }
 
     .of-hero-deal-copy{
@@ -237,7 +260,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       .of-hero-deal-art img{
         width:100%;
         height:100%;
-        filter:brightness(1.045) contrast(1.06) saturate(1.03) drop-shadow(0 15px 16px rgba(0,0,0,.12));
+        filter:brightness(1.025) contrast(1.045) saturate(1.03) drop-shadow(0 15px 16px rgba(0,0,0,.12));
       }
 
       .of-hero-deal-copy{padding:0}
@@ -256,16 +279,18 @@ document.addEventListener('DOMContentLoaded',()=>{
   slot.classList.add('hero-offer-slot');
   slot.innerHTML='<div class="of-hero-offer-loading">Buscando la mejor oferta…</div>';
 
-  /* En desktop alinea OFERTA DESTACADA exactamente con el inicio del H1 "ENERGÍA.". */
+  /* En desktop alinea OFERTA DESTACADA exactamente con la parte superior de "ENERGÍA.".
+     Se usa margin-top !important para que ninguna regla previa del hero pueda pisarlo. */
   const alignWithHeroTitle=()=>{
     if(window.innerWidth<=900){
-      slot.style.paddingTop='0px';
+      slot.style.setProperty('margin-top','0px','important');
       return;
     }
     if(!heroTitle||!heroGrid)return;
     const titleTop=heroTitle.getBoundingClientRect().top;
     const gridTop=heroGrid.getBoundingClientRect().top;
-    slot.style.paddingTop=Math.max(0,Math.round(titleTop-gridTop))+'px';
+    const offset=Math.max(0,Math.round(titleTop-gridTop));
+    slot.style.setProperty('margin-top',offset+'px','important');
   };
 
   const render=async()=>{
