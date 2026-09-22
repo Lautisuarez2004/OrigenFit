@@ -56,8 +56,8 @@
       </div>
 
       <div class="two">
-        <div class="field"><label>Alto imagen · computadora (px)</label><input id="hoImgDesktop" type="number" min="220" max="650" value="405"></div>
-        <div class="field"><label>Alto imagen · celular (px)</label><input id="hoImgMobile" type="number" min="200" max="520" value="320"></div>
+        <div class="field"><label>Alto imagen · computadora (px)</label><input id="hoImgDesktop" type="number" min="220" max="650" value="365"></div>
+        <div class="field"><label>Alto imagen · celular (px)</label><input id="hoImgMobile" type="number" min="200" max="520" value="285"></div>
       </div>
 
       <h3 style="margin:28px 0 10px">Colores</h3>
@@ -132,8 +132,8 @@
     $('hoSaleText').value=v.sale_text||'Precio especial';
     $('hoCta').value=v.cta_text||'Quiero esta oferta';
     $('hoTop').value=Number.isFinite(Number(v.desktop_top))?v.desktop_top:18;
-    $('hoImgDesktop').value=Number.isFinite(Number(v.image_height_desktop))?v.image_height_desktop:405;
-    $('hoImgMobile').value=Number.isFinite(Number(v.image_height_mobile))?v.image_height_mobile:320;
+    $('hoImgDesktop').value=Number.isFinite(Number(v.image_height_desktop))?v.image_height_desktop:365;
+    $('hoImgMobile').value=Number.isFinite(Number(v.image_height_mobile))?v.image_height_mobile:285;
     Object.entries(colorFields).forEach(([col,id])=>{if(v[col])$(id).value=v[col]});
     currentImageUrl=v.image_url||null;
     pendingPng=null;
@@ -187,8 +187,8 @@
         cta_text:$('hoCta').value.trim()||'Quiero esta oferta',
         image_url:imageUrl||null,
         desktop_top:Number($('hoTop').value)||0,
-        image_height_desktop:Number($('hoImgDesktop').value)||405,
-        image_height_mobile:Number($('hoImgMobile').value)||320,
+        image_height_desktop:Number($('hoImgDesktop').value)||365,
+        image_height_mobile:Number($('hoImgMobile').value)||285,
         show_discount:$('hoShowDiscount').checked,
         show_shipping:$('hoShowShipping').checked,
         show_stock:$('hoShowStock').checked,

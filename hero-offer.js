@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     button_bg:'#111111',
     button_text_color:'#ffffff',
     desktop_top:18,
-    image_height_desktop:405,
-    image_height_mobile:320,
+    image_height_desktop:365,
+    image_height_mobile:285,
     show_discount:true,
     show_stock:true,
     show_shipping:true,
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       padding:0;
       background:transparent;
       color:var(--of-headline,#e30613);
-      font-size:clamp(1.55rem,2.35vw,2.15rem);
+      font-size:clamp(1.38rem,2.05vw,1.9rem);
       line-height:.95;
       font-weight:1000;
       letter-spacing:-.04em;
@@ -81,14 +81,14 @@ document.addEventListener('DOMContentLoaded',()=>{
       position:absolute;
       top:54px;
       right:4px;
-      width:80px;
-      height:80px;
+      width:72px;
+      height:72px;
       border-radius:50%;
       background:var(--of-discount-bg,#e30613);
       color:var(--of-discount-text,#fff);
       display:grid;
       place-items:center;
-      font-size:1.4rem;
+      font-size:1.22rem;
       font-weight:1000;
       line-height:1;
       box-shadow:0 10px 24px rgba(0,0,0,.10);
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     .of-hero-deal-art{
-      height:var(--of-img-desktop,405px);
+      height:var(--of-img-desktop,365px);
       background:transparent!important;
       border:0!important;
       box-shadow:none!important;
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       margin:0 0 10px;
       max-width:520px;
       color:var(--of-title,#111);
-      font-size:clamp(1.4rem,2.3vw,1.9rem);
+      font-size:clamp(1.28rem,2vw,1.7rem);
       line-height:1.03;
       letter-spacing:-.045em;
     }
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
     .of-hero-price{
       color:var(--of-price,#e30613);
-      font-size:clamp(2.2rem,4vw,2.9rem);
+      font-size:clamp(2rem,3.5vw,2.65rem);
       line-height:.9;
       font-weight:1000;
       letter-spacing:-.055em;
@@ -186,8 +186,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     .of-hero-deal-cta{
       width:max-content;
-      min-height:48px;
-      padding:0 20px;
+      min-height:44px;
+      padding:0 18px;
       border-radius:999px;
       background:var(--of-button-bg,#111);
       color:var(--of-button-text,#fff);
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     @media(min-width:901px){
-      .hero-grid{min-height:575px!important}
+      .hero-grid{min-height:540px!important}
       .hero-logo-wrap.hero-offer-slot{
         position:absolute!important;
         top:var(--of-top,18px)!important;
@@ -249,26 +249,26 @@ document.addEventListener('DOMContentLoaded',()=>{
         padding-top:0!important;
       }
       .of-hero-deal{width:min(100%,590px)}
-      .of-hero-deal-art{height:var(--of-img-mobile,320px)}
+      .of-hero-deal-art{height:var(--of-img-mobile,285px)}
     }
 
     @media(max-width:650px){
       .hero{padding-bottom:28px!important}
       .hero-grid{gap:23px!important}
       .hero-logo-wrap.hero-offer-slot{min-height:0!important}
-      .of-hero-deal-top{font-size:1.5rem;margin-bottom:4px}
+      .of-hero-deal-top{font-size:1.32rem;margin-bottom:4px}
       .of-hero-deal-discount{
-        width:68px;height:68px;top:46px;right:0;font-size:1.15rem
+        width:60px;height:60px;top:42px;right:0;font-size:1.02rem
       }
-      .of-hero-deal-art{height:var(--of-img-mobile,320px);margin:0 -6px}
+      .of-hero-deal-art{height:var(--of-img-mobile,285px);margin:0 -6px}
       .of-hero-deal-copy{padding:0}
       .of-hero-deal-meta{font-size:.72rem;gap:6px 9px}
       .of-hero-deal-meta span+span:before{margin-right:9px}
-      .of-hero-deal h2{font-size:1.3rem;margin-bottom:9px}
-      .of-hero-price{font-size:2.15rem}
+      .of-hero-deal h2{font-size:1.18rem;margin-bottom:8px}
+      .of-hero-price{font-size:1.95rem}
       .of-hero-old{font-size:.9rem}
       .of-hero-saving{margin:7px 0 12px;font-size:.84rem}
-      .of-hero-deal-cta{min-height:46px;padding:0 18px}
+      .of-hero-deal-cta{min-height:42px;padding:0 16px}
       .of-hero-offer-loading{min-height:365px}
     }
   `;
@@ -345,8 +345,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       const wa='https://wa.me/542216187020?text='+encodeURIComponent(message);
 
       slot.style.setProperty('--of-top',Math.max(-20,Math.min(120,Number(settings.desktop_top)||18))+'px');
-      slot.style.setProperty('--of-img-desktop',Math.max(220,Math.min(650,Number(settings.image_height_desktop)||405))+'px');
-      slot.style.setProperty('--of-img-mobile',Math.max(200,Math.min(520,Number(settings.image_height_mobile)||320))+'px');
+      slot.style.setProperty('--of-img-desktop',Math.max(220,Math.min(650,Number(settings.image_height_desktop)||365))+'px');
+      slot.style.setProperty('--of-img-mobile',Math.max(200,Math.min(520,Number(settings.image_height_mobile)||285))+'px');
 
       slot.innerHTML=`
         <a class="of-hero-deal" href="${wa}" target="_blank" rel="noopener" aria-label="Consultar oferta de ${esc(p.name)} por WhatsApp">
