@@ -1,6 +1,8 @@
 /* Origen Fit · oferta destacada integrada al hero. */
 document.addEventListener('DOMContentLoaded',()=>{
   const slot=document.querySelector('.hero-logo-wrap');
+  const heroTitle=document.querySelector('.hero-grid h1');
+  const heroGrid=document.querySelector('.hero-grid');
   if(!slot)return;
 
   const money=n=>'$'+Number(n).toLocaleString('es-AR');
@@ -9,24 +11,26 @@ document.addEventListener('DOMContentLoaded',()=>{
   const style=document.createElement('style');
   style.id='of-hero-offer-style';
   style.textContent=`
-    @media(min-width:901px){
-      .hero-grid{align-items:start!important}
-      .hero-logo-wrap.hero-offer-slot{
-        align-items:flex-start!important;
-        justify-content:flex-end!important;
-        padding-top:26px!important;
-      }
+    /* Hero limpio: sin nubes/gradientes detrás del producto. */
+    .hero{
+      background:#fff!important;
+    }
+
+    .hero-grid{
+      align-items:start!important;
     }
 
     .hero-logo-wrap.hero-offer-slot{
       min-height:0!important;
       display:flex!important;
+      align-items:flex-start!important;
       justify-content:flex-end!important;
+      padding-top:0;
     }
 
     .of-hero-deal{
       position:relative;
-      width:min(100%,540px);
+      width:min(100%,560px);
       color:#111;
       background:transparent;
       border:0;
@@ -41,34 +45,37 @@ document.addEventListener('DOMContentLoaded',()=>{
       padding:0;
       background:transparent;
       color:var(--red,#e30613);
-      font-size:clamp(1.45rem,2.2vw,2rem);
+      font-size:clamp(1.55rem,2.35vw,2.15rem);
       line-height:.95;
       font-weight:1000;
-      letter-spacing:-.035em;
+      letter-spacing:-.04em;
       text-transform:uppercase;
     }
 
     .of-hero-deal-discount{
       position:absolute;
-      top:52px;
-      right:10px;
-      width:78px;
-      height:78px;
+      top:54px;
+      right:4px;
+      width:80px;
+      height:80px;
       border-radius:50%;
       background:var(--red,#e30613);
       color:#fff;
       display:grid;
       place-items:center;
-      font-size:1.35rem;
+      font-size:1.4rem;
       font-weight:1000;
       line-height:1;
-      box-shadow:0 10px 24px rgba(227,6,19,.22);
+      box-shadow:0 10px 24px rgba(227,6,19,.20);
       z-index:3;
     }
 
+    /* Sin tarjeta ni recuadro: la imagen flota directamente sobre el hero blanco. */
     .of-hero-deal-art{
-      height:345px;
-      background:transparent;
+      height:390px;
+      background:transparent!important;
+      border:0!important;
+      box-shadow:none!important;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -78,16 +85,17 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     .of-hero-deal-art img{
       display:block;
-      width:94%;
-      height:94%;
+      width:100%;
+      height:100%;
       object-fit:contain;
       object-position:center;
-      filter:drop-shadow(0 20px 22px rgba(0,0,0,.16));
+      background:transparent!important;
       mix-blend-mode:multiply;
+      filter:brightness(1.045) contrast(1.06) saturate(1.03) drop-shadow(0 18px 18px rgba(0,0,0,.13));
     }
 
     .of-hero-deal-copy{
-      padding:0 6px 0;
+      padding:0;
       text-align:left;
     }
 
@@ -114,9 +122,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     .of-hero-deal h2{
       margin:0 0 10px;
-      max-width:500px;
+      max-width:520px;
       color:#111;
-      font-size:clamp(1.35rem,2.25vw,1.85rem);
+      font-size:clamp(1.4rem,2.3vw,1.9rem);
       line-height:1.03;
       letter-spacing:-.045em;
     }
@@ -131,7 +139,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     .of-hero-price{
       color:var(--red,#e30613);
-      font-size:clamp(2.15rem,4vw,2.85rem);
+      font-size:clamp(2.2rem,4vw,2.9rem);
       line-height:.9;
       font-weight:1000;
       letter-spacing:-.055em;
@@ -180,8 +188,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     .of-hero-deal-cta span:last-child{font-size:1.3rem}
 
     .of-hero-offer-loading{
-      width:min(100%,540px);
-      min-height:420px;
+      width:min(100%,560px);
+      min-height:440px;
       display:grid;
       place-items:center;
       color:#777;
@@ -196,58 +204,69 @@ document.addEventListener('DOMContentLoaded',()=>{
     @media(max-width:900px){
       .hero-logo-wrap.hero-offer-slot{
         justify-content:center!important;
-        align-items:flex-start!important;
         padding-top:0!important;
       }
-      .of-hero-deal{width:min(100%,570px)}
-      .of-hero-deal-art{height:320px}
-      .of-hero-deal-art img{width:96%;height:96%}
+      .of-hero-deal{width:min(100%,590px)}
+      .of-hero-deal-art{height:350px}
+      .of-hero-deal-art img{width:100%;height:100%}
     }
 
     @media(max-width:650px){
-      .hero{padding-bottom:26px!important}
-      .hero-grid{gap:24px!important}
+      .hero{padding-bottom:28px!important}
+      .hero-grid{gap:23px!important}
       .hero-logo-wrap.hero-offer-slot{min-height:0!important}
 
       .of-hero-deal-top{
-        font-size:1.35rem;
-        margin-bottom:5px;
+        font-size:1.5rem;
+        margin-bottom:4px;
       }
 
       .of-hero-deal-discount{
-        width:66px;
-        height:66px;
-        top:42px;
-        right:2px;
-        font-size:1.12rem;
+        width:68px;
+        height:68px;
+        top:46px;
+        right:0;
+        font-size:1.15rem;
       }
 
       .of-hero-deal-art{
-        height:285px;
-        margin:0 -4px;
+        height:320px;
+        margin:0 -6px;
       }
 
       .of-hero-deal-art img{
         width:100%;
         height:100%;
-        filter:drop-shadow(0 16px 18px rgba(0,0,0,.14));
+        filter:brightness(1.045) contrast(1.06) saturate(1.03) drop-shadow(0 15px 16px rgba(0,0,0,.12));
       }
 
       .of-hero-deal-copy{padding:0}
       .of-hero-deal-meta{font-size:.72rem;gap:6px 9px}
       .of-hero-deal-meta span+span:before{margin-right:9px}
-      .of-hero-deal h2{font-size:1.28rem;margin-bottom:9px}
-      .of-hero-price{font-size:2.1rem}
+      .of-hero-deal h2{font-size:1.3rem;margin-bottom:9px}
+      .of-hero-price{font-size:2.15rem}
       .of-hero-old{font-size:.9rem}
       .of-hero-saving{margin:7px 0 12px;font-size:.84rem}
       .of-hero-deal-cta{min-height:46px;padding:0 18px}
-      .of-hero-offer-loading{min-height:350px}
+      .of-hero-offer-loading{min-height:365px}
     }
   `;
   document.head.appendChild(style);
 
   slot.classList.add('hero-offer-slot');
   slot.innerHTML='<div class="of-hero-offer-loading">Buscando la mejor oferta…</div>';
+
+  /* En desktop alinea OFERTA DESTACADA exactamente con el inicio del H1 "ENERGÍA.". */
+  const alignWithHeroTitle=()=>{
+    if(window.innerWidth<=900){
+      slot.style.paddingTop='0px';
+      return;
+    }
+    if(!heroTitle||!heroGrid)return;
+    const titleTop=heroTitle.getBoundingClientRect().top;
+    const gridTop=heroGrid.getBoundingClientRect().top;
+    slot.style.paddingTop=Math.max(0,Math.round(titleTop-gridTop))+'px';
+  };
 
   const render=async()=>{
     try{
@@ -313,11 +332,16 @@ document.addEventListener('DOMContentLoaded',()=>{
           </div>
         </a>
       `;
+
+      requestAnimationFrame(alignWithHeroTitle);
     }catch(err){
       console.warn('Oferta del hero:',err?.message||err);
       slot.innerHTML='<img class="hero-logo" src="logo-principal.png" alt="Origen Fit">';
+      requestAnimationFrame(alignWithHeroTitle);
     }
   };
 
+  window.addEventListener('resize',()=>requestAnimationFrame(alignWithHeroTitle));
+  requestAnimationFrame(alignWithHeroTitle);
   render();
 });
