@@ -1,8 +1,6 @@
 /* Origen Fit · oferta destacada integrada al hero. */
 document.addEventListener('DOMContentLoaded',()=>{
   const slot=document.querySelector('.hero-logo-wrap');
-  const heroTitle=document.querySelector('.hero-grid h1');
-  const heroGrid=document.querySelector('.hero-grid');
   if(!slot)return;
 
   const money=n=>'$'+Number(n).toLocaleString('es-AR');
@@ -16,22 +14,6 @@ document.addEventListener('DOMContentLoaded',()=>{
       position:relative!important;
     }
 
-    @media(min-width:901px){
-      .hero-grid{
-        min-height:575px!important;
-      }
-
-      .hero-logo-wrap.hero-offer-slot{
-        position:absolute!important;
-        top:29px!important;
-        right:0!important;
-        width:calc((100% - 44px)/2)!important;
-        margin:0!important;
-        padding:0!important;
-        transform:none!important;
-      }
-    }
-
     .hero-logo-wrap.hero-offer-slot{
       min-height:0!important;
       display:flex!important;
@@ -39,7 +21,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       justify-content:flex-end!important;
       padding-top:0!important;
       position:relative!important;
-      z-index:5!important;
+      z-index:8!important;
     }
 
     .of-hero-deal{
@@ -110,9 +92,13 @@ document.addEventListener('DOMContentLoaded',()=>{
       object-position:center;
       background:transparent!important;
       mix-blend-mode:normal!important;
-      -webkit-mask-image:radial-gradient(ellipse 43% 52% at 50% 50%,#000 0%,#000 72%,rgba(0,0,0,.9) 82%,rgba(0,0,0,.35) 93%,transparent 100%);
-      mask-image:radial-gradient(ellipse 43% 52% at 50% 50%,#000 0%,#000 72%,rgba(0,0,0,.9) 82%,rgba(0,0,0,.35) 93%,transparent 100%);
       filter:brightness(1.02) contrast(1.05) saturate(1.03) drop-shadow(0 18px 18px rgba(0,0,0,.13));
+    }
+
+    /* Este producto viene en JPG con fondo claro. Se recorta sólo el pouch,
+       sin óvalos ni placas blancas detrás. */
+    .of-hero-deal-art img.of-pouch-cutout{
+      clip-path:polygon(14% 12%,86% 12%,86% 84%,78% 92%,66% 96%,34% 96%,22% 92%,14% 84%);
     }
 
     .of-hero-deal-copy{
@@ -222,6 +208,31 @@ document.addEventListener('DOMContentLoaded',()=>{
       border:0;
     }
 
+
+    @media(min-width:901px){
+      .hero-grid{
+        position:relative!important;
+        min-height:575px!important;
+      }
+
+      .hero-logo-wrap.hero-offer-slot{
+        position:absolute!important;
+        top:29px!important;
+        right:0!important;
+        width:calc((100% - 44px)/2)!important;
+        margin:0!important;
+        padding:0!important;
+        transform:none!important;
+        z-index:12!important;
+      }
+
+      .of-hero-deal{
+        width:100%!important;
+        max-width:560px!important;
+        margin-left:auto!important;
+      }
+    }
+
     @media(max-width:900px){
       .hero-grid{min-height:0!important}
       .hero-logo-wrap.hero-offer-slot{
@@ -283,8 +294,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   slot.classList.add('hero-offer-slot');
   slot.innerHTML='<div class="of-hero-offer-loading">Buscando la mejor oferta…</div>';
 
-  const alignWithHeroTitle=()=>{};
-
   const render=async()=>{
     try{
       if(typeof db==='undefined')throw new Error('Catálogo todavía no disponible');
@@ -331,7 +340,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           <div class="of-hero-deal-top">🔥 OFERTA DESTACADA</div>
           <div class="of-hero-deal-discount">-${discount}%</div>
           <div class="of-hero-deal-art">
-            <img src="${esc(p.image_url)}" alt="${esc(p.name)}">
+            <img class="${/body advance/i.test(String(p.name||''))?'of-pouch-cutout':''}" src="${esc(p.image_url)}" alt="${esc(p.name)}">
           </div>
           <div class="of-hero-deal-copy">
             <div class="of-hero-deal-meta">
@@ -349,16 +358,10 @@ document.addEventListener('DOMContentLoaded',()=>{
           </div>
         </a>
       `;
-
-      requestAnimationFrame(alignWithHeroTitle);
     }catch(err){
       console.warn('Oferta del hero:',err?.message||err);
       slot.innerHTML='<img class="hero-logo" src="logo-principal.png" alt="Origen Fit">';
-      requestAnimationFrame(alignWithHeroTitle);
     }
   };
-
-  window.addEventListener('resize',()=>requestAnimationFrame(alignWithHeroTitle));
-  requestAnimationFrame(alignWithHeroTitle);
   render();
 });
