@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     button_bg:'#111111',
     button_text_color:'#ffffff',
     desktop_top:18,
-    image_height_desktop:365,
-    image_height_mobile:285,
+    image_height_desktop:340,
+    image_height_mobile:265,
     show_discount:true,
     show_stock:true,
     show_shipping:true,
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       padding:0;
       background:transparent;
       color:var(--of-headline,#e30613);
-      font-size:clamp(1.38rem,2.05vw,1.9rem);
+      font-size:clamp(1.28rem,1.9vw,1.75rem);
       line-height:.95;
       font-weight:1000;
       letter-spacing:-.04em;
@@ -81,14 +81,14 @@ document.addEventListener('DOMContentLoaded',()=>{
       position:absolute;
       top:54px;
       right:4px;
-      width:72px;
-      height:72px;
+      width:66px;
+      height:66px;
       border-radius:50%;
       background:var(--of-discount-bg,#e30613);
       color:var(--of-discount-text,#fff);
       display:grid;
       place-items:center;
-      font-size:1.22rem;
+      font-size:1.1rem;
       font-weight:1000;
       line-height:1;
       box-shadow:0 10px 24px rgba(0,0,0,.10);
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     .of-hero-deal-art{
-      height:var(--of-img-desktop,365px);
+      height:var(--of-img-desktop,340px);
       background:transparent!important;
       border:0!important;
       box-shadow:none!important;
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       gap:8px 12px;
       margin:0 0 7px;
       color:var(--of-meta,#555);
-      font-size:.8rem;
+      font-size:.76rem;
       font-weight:900;
       text-transform:uppercase;
       letter-spacing:.035em;
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       margin:0 0 10px;
       max-width:520px;
       color:var(--of-title,#111);
-      font-size:clamp(1.28rem,2vw,1.7rem);
+      font-size:clamp(1.18rem,1.85vw,1.58rem);
       line-height:1.03;
       letter-spacing:-.045em;
     }
@@ -164,14 +164,14 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
     .of-hero-price{
       color:var(--of-price,#e30613);
-      font-size:clamp(2rem,3.5vw,2.65rem);
+      font-size:clamp(1.85rem,3.2vw,2.45rem);
       line-height:.9;
       font-weight:1000;
       letter-spacing:-.055em;
     }
     .of-hero-old{
       color:var(--of-old,#84868c);
-      font-size:1rem;
+      font-size:.92rem;
       font-weight:850;
       text-decoration:line-through;
       padding-bottom:3px;
@@ -179,15 +179,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     .of-hero-saving{
       margin:8px 0 14px;
       color:var(--of-saving,#4f5157);
-      font-size:.9rem;
+      font-size:.84rem;
       font-weight:750;
     }
     .of-hero-saving strong{color:var(--of-title,#111)}
 
     .of-hero-deal-cta{
       width:max-content;
-      min-height:44px;
-      padding:0 18px;
+      min-height:40px;
+      padding:0 16px;
       border-radius:999px;
       background:var(--of-button-bg,#111);
       color:var(--of-button-text,#fff);
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       align-items:center;
       justify-content:center;
       gap:14px;
-      font-size:.82rem;
+      font-size:.76rem;
       font-weight:1000;
       letter-spacing:.04em;
       text-transform:uppercase;
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     @media(min-width:901px){
-      .hero-grid{min-height:540px!important}
+      .hero-grid{min-height:505px!important}
       .hero-logo-wrap.hero-offer-slot{
         position:absolute!important;
         top:var(--of-top,18px)!important;
@@ -249,26 +249,26 @@ document.addEventListener('DOMContentLoaded',()=>{
         padding-top:0!important;
       }
       .of-hero-deal{width:min(100%,590px)}
-      .of-hero-deal-art{height:var(--of-img-mobile,285px)}
+      .of-hero-deal-art{height:var(--of-img-mobile,265px)}
     }
 
     @media(max-width:650px){
       .hero{padding-bottom:28px!important}
       .hero-grid{gap:23px!important}
       .hero-logo-wrap.hero-offer-slot{min-height:0!important}
-      .of-hero-deal-top{font-size:1.32rem;margin-bottom:4px}
+      .of-hero-deal-top{font-size:1.2rem;margin-bottom:4px}
       .of-hero-deal-discount{
-        width:60px;height:60px;top:42px;right:0;font-size:1.02rem
+        width:56px;height:56px;top:40px;right:0;font-size:.96rem
       }
-      .of-hero-deal-art{height:var(--of-img-mobile,285px);margin:0 -6px}
+      .of-hero-deal-art{height:var(--of-img-mobile,265px);margin:0 -6px}
       .of-hero-deal-copy{padding:0}
       .of-hero-deal-meta{font-size:.72rem;gap:6px 9px}
       .of-hero-deal-meta span+span:before{margin-right:9px}
-      .of-hero-deal h2{font-size:1.18rem;margin-bottom:8px}
-      .of-hero-price{font-size:1.95rem}
-      .of-hero-old{font-size:.9rem}
-      .of-hero-saving{margin:7px 0 12px;font-size:.84rem}
-      .of-hero-deal-cta{min-height:42px;padding:0 16px}
+      .of-hero-deal h2{font-size:1.08rem;margin-bottom:7px}
+      .of-hero-price{font-size:1.8rem}
+      .of-hero-old{font-size:.84rem}
+      .of-hero-saving{margin:6px 0 10px;font-size:.78rem}
+      .of-hero-deal-cta{min-height:39px;padding:0 15px}
       .of-hero-offer-loading{min-height:365px}
     }
   `;
@@ -345,8 +345,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       const wa='https://wa.me/542216187020?text='+encodeURIComponent(message);
 
       slot.style.setProperty('--of-top',Math.max(-20,Math.min(120,Number(settings.desktop_top)||18))+'px');
-      slot.style.setProperty('--of-img-desktop',Math.max(220,Math.min(650,Number(settings.image_height_desktop)||365))+'px');
-      slot.style.setProperty('--of-img-mobile',Math.max(200,Math.min(520,Number(settings.image_height_mobile)||285))+'px');
+      slot.style.setProperty('--of-img-desktop',Math.max(220,Math.min(650,Number(settings.image_height_desktop)||340))+'px');
+      slot.style.setProperty('--of-img-mobile',Math.max(200,Math.min(520,Number(settings.image_height_mobile)||265))+'px');
 
       slot.innerHTML=`
         <a class="of-hero-deal" href="${wa}" target="_blank" rel="noopener" aria-label="Consultar oferta de ${esc(p.name)} por WhatsApp">
