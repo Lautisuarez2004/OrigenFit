@@ -38,6 +38,37 @@ document.addEventListener('DOMContentLoaded',()=>{
   const style=document.createElement('style');
   style.id='of-hero-offer-style';
   style.textContent=`
+
+    /* Guía visual temporal de límites de la oferta especial (solo dev). */
+    .hero-logo-wrap.hero-offer-slot{
+      outline:2px dashed rgba(0,102,255,.72)!important;
+      outline-offset:0!important;
+    }
+
+    .hero-logo-wrap.hero-offer-slot::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:60;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(0,102,255,.13) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,102,255,.13) 1px,transparent 1px),
+        linear-gradient(rgba(0,102,255,.28) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,102,255,.28) 1px,transparent 1px);
+      background-size:
+        20px 20px,
+        20px 20px,
+        100px 100px,
+        100px 100px;
+      background-position:-1px -1px;
+    }
+
+    .of-hero-deal{
+      outline:1px solid rgba(255,0,90,.55)!important;
+      outline-offset:0!important;
+    }
+
     .hero-grid{
       align-items:start!important;
       position:relative!important;
