@@ -141,30 +141,54 @@
     preview(currentImageUrl);
   }
 
+  async function isRealPng(file){
+    if(!file)return false;
+    try{
+      const bytes=new Uint8Array(await file.slice(0,8).arrayBuffer());
+      const sig=[137,80,78,71,13,10,26,10];
+      return sig.every((v,i)=>bytes[i]===v);
+    }catch(_){
+      return /\.png$/i.test(file.name||'');
+    }
+  }
+
+  async function validatePng(file){
+    if(!file)throw new Error('Elegí una imagen PNG.');
+    if(file.size>8*1024*1024)throw new Error('El PNG supera 8 MB. Reducí el peso de la imagen e intentá de nuevo.');
+    if(!(await isRealPng(file)))throw new Error('La imagen de la oferta debe ser un PNG real.');
+    return true;
+  }
+
   async function uploadPng(){
     if(!pendingPng)return currentImageUrl;
-    if(pendingPng.type!=='image/png'&&!/\.png$/i.test(pendingPng.name||'')){
-      throw new Error('La imagen de la oferta debe ser PNG.');
-    }
-    const path='hero-offer/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.png';
-    const {error}=await db.storage.from('product-images').upload(path,pendingPng,{contentType:'image/png',upsert:false});
+    await validatePng(pendingPng);
+    const uid=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2));
+    const path='hero-offer/'+Date.now()+'-'+uid+'.png';
+    const {error}=await db.storage.from('product-images').upload(path,pendingPng,{
+      upsert:false,
+      contentType:'image/png',
+      cacheControl:'3600'
+    });
     if(error)throw error;
     const {data}=db.storage.from('product-images').getPublicUrl(path);
+    if(!data?.publicUrl)throw new Error('La imagen se subió pero no se pudo obtener su URL pública.');
     return data.publicUrl;
   }
 
-  $('hoImageFile').addEventListener('change',()=>{
+  $('hoImageFile').addEventListener('change',async()=>{
     const file=$('hoImageFile').files?.[0]||null;
     $('hoErr').textContent='';
     if(!file){pendingPng=null;preview(currentImageUrl);return;}
-    if(file.type!=='image/png'&&!/\.png$/i.test(file.name||'')){
+    try{
+      await validatePng(file);
+      pendingPng=file;
+      preview(URL.createObjectURL(file));
+    }catch(err){
       $('hoImageFile').value='';
       pendingPng=null;
-      $('hoErr').textContent='Usá únicamente PNG con fondo transparente.';
-      return;
+      preview(currentImageUrl);
+      $('hoErr').textContent=err?.message||String(err);
     }
-    pendingPng=file;
-    preview(URL.createObjectURL(file));
   });
 
   $('hoRemoveImage').onclick=()=>{
