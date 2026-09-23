@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     button_bg:'#111111',
     button_text_color:'#ffffff',
     desktop_top:18,
-    image_height_desktop:340,
-    image_height_mobile:265,
+    image_height_desktop:320,
+    image_height_mobile:250,
     show_discount:true,
     show_stock:true,
     show_shipping:true,
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     .of-hero-deal-art{
-      height:var(--of-img-desktop,340px);
+      height:var(--of-img-desktop,320px);
       background:transparent!important;
       border:0!important;
       box-shadow:none!important;
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       align-items:center;
       flex-wrap:wrap;
       gap:8px 12px;
-      margin:0 0 7px;
+      margin:0 0 4px;
       color:var(--of-meta,#555);
       font-size:.76rem;
       font-weight:900;
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     .of-hero-deal h2{
-      margin:0 0 10px;
+      margin:0 0 6px;
       max-width:520px;
       color:var(--of-title,#111);
       font-size:clamp(1.18rem,1.85vw,1.58rem);
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       align-items:end;
       gap:12px;
       flex-wrap:wrap;
-      margin:0 0 5px;
+      margin:0 0 2px;
     }
     .of-hero-price{
       color:var(--of-price,#e30613);
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       padding-bottom:3px;
     }
     .of-hero-saving{
-      margin:8px 0 14px;
+      margin:4px 0 6px;
       color:var(--of-saving,#4f5157);
       font-size:.84rem;
       font-weight:750;
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     .of-hero-deal-cta{
       width:max-content;
-      min-height:40px;
+      min-height:38px;
       padding:0 16px;
       border-radius:999px;
       background:var(--of-button-bg,#111);
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     @media(min-width:901px){
-      .hero-grid{min-height:505px!important}
+      .hero-grid{min-height:490px!important}
       .hero-logo-wrap.hero-offer-slot{
         position:absolute!important;
         top:var(--of-top,18px)!important;
@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         padding-top:0!important;
       }
       .of-hero-deal{width:min(100%,590px)}
-      .of-hero-deal-art{height:var(--of-img-mobile,265px)}
+      .of-hero-deal-art{height:var(--of-img-mobile,250px)}
     }
 
     @media(max-width:650px){
@@ -260,15 +260,15 @@ document.addEventListener('DOMContentLoaded',()=>{
       .of-hero-deal-discount{
         width:56px;height:56px;top:40px;right:0;font-size:.96rem
       }
-      .of-hero-deal-art{height:var(--of-img-mobile,265px);margin:0 -6px}
+      .of-hero-deal-art{height:var(--of-img-mobile,250px);margin:0 -6px}
       .of-hero-deal-copy{padding:0}
-      .of-hero-deal-meta{font-size:.72rem;gap:6px 9px}
+      .of-hero-deal-meta{font-size:.7rem;gap:5px 8px;margin-bottom:3px}
       .of-hero-deal-meta span+span:before{margin-right:9px}
-      .of-hero-deal h2{font-size:1.08rem;margin-bottom:7px}
+      .of-hero-deal h2{font-size:1.05rem;margin-bottom:5px}
       .of-hero-price{font-size:1.8rem}
       .of-hero-old{font-size:.84rem}
-      .of-hero-saving{margin:6px 0 10px;font-size:.78rem}
-      .of-hero-deal-cta{min-height:39px;padding:0 15px}
+      .of-hero-saving{margin:4px 0 6px;font-size:.76rem}
+      .of-hero-deal-cta{min-height:37px;padding:0 14px}
       .of-hero-offer-loading{min-height:365px}
     }
   `;
@@ -345,8 +345,8 @@ document.addEventListener('DOMContentLoaded',()=>{
       const wa='https://wa.me/542216187020?text='+encodeURIComponent(message);
 
       slot.style.setProperty('--of-top',Math.max(-20,Math.min(120,Number(settings.desktop_top)||18))+'px');
-      slot.style.setProperty('--of-img-desktop',Math.max(220,Math.min(650,Number(settings.image_height_desktop)||340))+'px');
-      slot.style.setProperty('--of-img-mobile',Math.max(200,Math.min(520,Number(settings.image_height_mobile)||265))+'px');
+      slot.style.setProperty('--of-img-desktop',Math.max(220,Math.min(650,Number(settings.image_height_desktop)||320))+'px');
+      slot.style.setProperty('--of-img-mobile',Math.max(200,Math.min(520,Number(settings.image_height_mobile)||250))+'px');
 
       slot.innerHTML=`
         <a class="of-hero-deal" href="${wa}" target="_blank" rel="noopener" aria-label="Consultar oferta de ${esc(p.name)} por WhatsApp">
