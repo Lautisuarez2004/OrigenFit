@@ -41,33 +41,30 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     /* Guía visual temporal de límites de la oferta especial (solo dev). */
     .hero-logo-wrap.hero-offer-slot{
-      outline:2px dashed rgba(0,102,255,.72)!important;
+      outline:3px dashed rgba(0,102,255,.95)!important;
       outline-offset:0!important;
-    }
-
-    .hero-logo-wrap.hero-offer-slot::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      z-index:60;
-      pointer-events:none;
       background-image:
-        linear-gradient(rgba(0,102,255,.13) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(0,102,255,.13) 1px,transparent 1px),
-        linear-gradient(rgba(0,102,255,.28) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(0,102,255,.28) 1px,transparent 1px);
+        linear-gradient(rgba(0,102,255,.18) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,102,255,.18) 1px,transparent 1px),
+        linear-gradient(rgba(0,102,255,.42) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,102,255,.42) 1px,transparent 1px)!important;
       background-size:
         20px 20px,
         20px 20px,
         100px 100px,
-        100px 100px;
-      background-position:-1px -1px;
+        100px 100px!important;
+      background-position:-1px -1px!important;
+      background-color:rgba(255,255,255,.08)!important;
     }
 
     .of-hero-deal{
-      outline:1px solid rgba(255,0,90,.55)!important;
+      outline:2px solid rgba(255,0,90,.8)!important;
       outline-offset:0!important;
     }
+
+    .of-hero-deal-top{outline:1px dashed rgba(255,140,0,.9)!important}
+    .of-hero-deal-art{outline:1px dashed rgba(0,160,90,.9)!important}
+    .of-hero-deal-copy{outline:1px dashed rgba(120,0,220,.9)!important}
 
     .hero-grid{
       align-items:start!important;
