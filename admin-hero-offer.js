@@ -14,6 +14,79 @@
   const securityBtn=side.querySelector('[data-panel="security"]');
   side.insertBefore(btn,securityBtn||null);
 
+  const guideStyle=document.createElement('style');
+  guideStyle.textContent=`
+    .ho-grid-preview{
+      position:relative;
+      width:min(100%,560px);
+      aspect-ratio:560/490;
+      overflow:hidden;
+      border:2px solid #111;
+      border-radius:14px;
+      background-color:#fff;
+      background-image:
+        linear-gradient(rgba(0,102,255,.16) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,102,255,.16) 1px,transparent 1px),
+        linear-gradient(rgba(0,102,255,.38) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,102,255,.38) 1px,transparent 1px);
+      background-size:20px 20px,20px 20px,100px 100px,100px 100px;
+      background-position:-1px -1px;
+    }
+    .ho-grid-preview:before{
+      content:"Límite oferta · 560 × 490";
+      position:absolute;left:8px;top:7px;z-index:20;
+      padding:3px 7px;border-radius:7px;background:#111;color:#fff;
+      font-size:10px;font-weight:900;letter-spacing:.04em
+    }
+    .ho-grid-offer{
+      position:absolute;
+      left:0;right:0;
+      top:var(--ho-grid-top,18px);
+      bottom:0;
+      padding:22px 16px 10px;
+      outline:2px dashed rgba(227,6,19,.85);
+      outline-offset:-2px;
+      pointer-events:none;
+    }
+    .ho-grid-headline{
+      color:var(--ho-headline,#e30613);
+      font-weight:1000;font-size:18px;line-height:1;
+      text-transform:uppercase;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .ho-grid-image-zone{
+      position:relative;
+      height:var(--ho-grid-img,320px);
+      margin-top:5px;
+      outline:2px dashed rgba(0,145,90,.78);
+      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;
+    }
+    .ho-grid-image-zone:after{
+      content:"zona imagen";
+      position:absolute;right:5px;top:5px;
+      padding:2px 5px;border-radius:5px;background:rgba(0,145,90,.88);color:#fff;
+      font-size:9px;font-weight:900;text-transform:uppercase
+    }
+    .ho-grid-image-zone img{
+      width:100%;height:100%;object-fit:contain;display:block;
+      filter:drop-shadow(0 8px 8px rgba(0,0,0,.12));
+    }
+    .ho-grid-copy{
+      margin-top:5px;
+      min-height:72px;
+      outline:2px dashed rgba(120,0,220,.7);
+      padding:5px 7px;
+      font-size:10px;line-height:1.15;color:#333;
+      background:rgba(255,255,255,.56)
+    }
+    .ho-grid-copy strong{display:block;font-size:13px;margin:2px 0}
+    .ho-grid-copy .price{font-size:16px;font-weight:1000;color:var(--ho-price,#e30613)}
+    .ho-grid-note{font-size:.78rem;margin-top:7px;color:#65676c}
+    #hoImagePreview img{max-height:220px;object-fit:contain}
+  `;
+  document.head.appendChild(guideStyle);
+
   const panel=document.createElement('section');
   panel.id='heroOfferPanel';
   panel.className='hidden';
@@ -49,10 +122,29 @@
 
       <div class="imagebox">
         <strong>Imagen exclusiva para la oferta</strong>
-        <div class="field"><input id="hoImageFile" type="file" accept="image/png,.png"></div>
-        <div class="muted" style="font-size:.82rem"><strong>Usar únicamente PNG con fondo transparente.</strong> Así las nubes rojas quedan detrás del producto sin recuadros blancos.</div>
+        <div class="field"><input id="hoImageFile" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp"></div>
+        <div class="muted" style="font-size:.82rem"><strong>Podés subir PNG, JPG o WebP.</strong> El fondo uniforme se elimina automáticamente y la imagen se guarda como PNG transparente. Funciona mejor con fondos claros o lisos.</div>
         <div id="hoImagePreview" class="imagepreview"><span class="muted">Se usará la foto del producto hasta que cargues un PNG.</span></div>
         <div style="margin-top:10px"><button id="hoRemoveImage" type="button" class="btn light">Usar foto del producto</button></div>
+      </div>
+
+      <div class="field" style="margin-top:18px">
+        <label>Vista previa de límites · computadora</label>
+        <div id="hoGridPreview" class="ho-grid-preview">
+          <div id="hoGridOffer" class="ho-grid-offer">
+            <div id="hoGridHeadline" class="ho-grid-headline">🔥 OFERTA DESTACADA</div>
+            <div id="hoGridImageZone" class="ho-grid-image-zone">
+              <span class="muted">Imagen del producto</span>
+            </div>
+            <div class="ho-grid-copy">
+              <span id="hoGridSale">PRECIO ESPECIAL · STOCK</span>
+              <strong id="hoGridProduct">Producto destacado</strong>
+              <span class="price">$00.000</span>
+              <div id="hoGridCta" style="margin-top:3px;font-weight:900">QUIERO ESTA OFERTA →</div>
+            </div>
+          </div>
+        </div>
+        <div class="ho-grid-note">Azul: cuadrícula de referencia · rojo: límite total de la oferta · verde: zona de imagen · violeta: textos/precio/botón.</div>
       </div>
 
       <div class="two">
@@ -90,6 +182,7 @@
   const $=id=>document.getElementById(id);
   let currentImageUrl=null;
   let pendingPng=null;
+  let previewObjectUrl=null;
 
   const colorFields={
     headline_color:'hoHeadlineColor',
@@ -108,8 +201,29 @@
 
   const preview=url=>{
     const box=$('hoImagePreview');
-    box.innerHTML=url?'<img src="'+esc(url)+'" alt="Preview oferta">':'<span class="muted">Se usará la foto del producto hasta que cargues un PNG.</span>';
+    box.innerHTML=url?'<img src="'+esc(url)+'" alt="Preview oferta">':'<span class="muted">Se usará la foto del producto hasta que cargues una imagen.</span>';
+    const zone=$('hoGridImageZone');
+    if(zone)zone.innerHTML=url?'<img src="'+esc(url)+'" alt="Vista previa del producto">':'<span class="muted">Imagen del producto</span>';
+    updateGridPreview();
   };
+
+  function updateGridPreview(){
+    const grid=$('hoGridOffer');
+    if(!grid)return;
+    const top=Math.max(-20,Math.min(120,Number($('hoTop')?.value)||0));
+    const img=Math.max(220,Math.min(650,Number($('hoImgDesktop')?.value)||320));
+    /* La maqueta mide 560×490. Escalamos el alto lógico de imagen para verla completa en el preview. */
+    const previewHeight=$('hoGridPreview')?.clientHeight||490;
+    const scale=previewHeight/490;
+    grid.style.setProperty('--ho-grid-top',(top*scale)+'px');
+    grid.style.setProperty('--ho-grid-img',(img*scale)+'px');
+    grid.style.setProperty('--ho-headline',$('hoHeadlineColor')?.value||'#e30613');
+    grid.style.setProperty('--ho-price',$('hoPriceColor')?.value||'#e30613');
+    if($('hoGridHeadline'))$('hoGridHeadline').textContent=$('hoHeadline')?.value||'🔥 OFERTA DESTACADA';
+    if($('hoGridSale'))$('hoGridSale').textContent=($('hoSaleText')?.value||'Precio especial').toUpperCase()+' · STOCK';
+    if($('hoGridProduct'))$('hoGridProduct').textContent=$('hoProduct')?.selectedOptions?.[0]?.textContent||'Producto destacado';
+    if($('hoGridCta'))$('hoGridCta').textContent=($('hoCta')?.value||'Quiero esta oferta').toUpperCase()+' →';
+  }
 
   async function loadHeroAdmin(){
     $('hoErr').textContent='';
@@ -139,29 +253,93 @@
     pendingPng=null;
     $('hoImageFile').value='';
     preview(currentImageUrl);
+    requestAnimationFrame(updateGridPreview);
   }
 
-  async function isRealPng(file){
-    if(!file)return false;
-    try{
-      const bytes=new Uint8Array(await file.slice(0,8).arrayBuffer());
-      const sig=[137,80,78,71,13,10,26,10];
-      return sig.every((v,i)=>bytes[i]===v);
-    }catch(_){
-      return /\.png$/i.test(file.name||'');
+  async function processImage(file){
+    if(!file)throw new Error('Elegí una imagen.');
+    if(!/^image\/(png|jpeg|webp)$/.test(file.type)&&!(/\.(png|jpe?g|webp)$/i.test(file.name||''))){
+      throw new Error('Usá PNG, JPG o WebP.');
     }
-  }
+    if(file.size>8*1024*1024)throw new Error('La imagen supera 8 MB.');
 
-  async function validatePng(file){
-    if(!file)throw new Error('Elegí una imagen PNG.');
-    if(file.size>8*1024*1024)throw new Error('El PNG supera 8 MB. Reducí el peso de la imagen e intentá de nuevo.');
-    if(!(await isRealPng(file)))throw new Error('La imagen de la oferta debe ser un PNG real.');
-    return true;
+    const objectUrl=URL.createObjectURL(file);
+    const img=new Image();
+    img.decoding='async';
+    try{
+      await new Promise((resolve,reject)=>{
+        img.onload=resolve;
+        img.onerror=()=>reject(new Error('No se pudo leer la imagen.'));
+        img.src=objectUrl;
+      });
+
+      const maxDim=1400;
+      const scale=Math.min(1,maxDim/Math.max(img.naturalWidth||img.width,img.naturalHeight||img.height));
+      const w=Math.max(1,Math.round((img.naturalWidth||img.width)*scale));
+      const h=Math.max(1,Math.round((img.naturalHeight||img.height)*scale));
+      const canvas=document.createElement('canvas');
+      canvas.width=w;canvas.height=h;
+      const ctx=canvas.getContext('2d',{willReadFrequently:true});
+      ctx.drawImage(img,0,0,w,h);
+
+      const image=ctx.getImageData(0,0,w,h);
+      const d=image.data;
+
+      /* Color de fondo estimado desde las cuatro esquinas. */
+      const samples=[];
+      const pad=Math.max(2,Math.round(Math.min(w,h)*.025));
+      const take=(x0,y0)=>{
+        for(let y=y0;y<Math.min(h,y0+pad);y+=Math.max(1,Math.floor(pad/4))){
+          for(let x=x0;x<Math.min(w,x0+pad);x+=Math.max(1,Math.floor(pad/4))){
+            const i=(y*w+x)*4;
+            if(d[i+3]>40)samples.push([d[i],d[i+1],d[i+2]]);
+          }
+        }
+      };
+      take(0,0);take(Math.max(0,w-pad),0);take(0,Math.max(0,h-pad));take(Math.max(0,w-pad),Math.max(0,h-pad));
+      const bg=samples.length?samples.reduce((a,p)=>[a[0]+p[0],a[1]+p[1],a[2]+p[2]],[0,0,0]).map(v=>v/samples.length):[255,255,255];
+
+      const maxDist=68;
+      const maxDist2=maxDist*maxDist;
+      const visited=new Uint8Array(w*h);
+      const queue=new Int32Array(w*h);
+      let qh=0,qt=0;
+      const similar=idx=>{
+        const i=idx*4;
+        if(d[i+3]<=10)return true;
+        const dr=d[i]-bg[0],dg=d[i+1]-bg[1],db=d[i+2]-bg[2];
+        return dr*dr+dg*dg+db*db<=maxDist2;
+      };
+      const push=idx=>{
+        if(idx<0||idx>=w*h||visited[idx]||!similar(idx))return;
+        visited[idx]=1;queue[qt++]=idx;
+      };
+      for(let x=0;x<w;x++){push(x);push((h-1)*w+x);}
+      for(let y=0;y<h;y++){push(y*w);push(y*w+w-1);}
+
+      while(qh<qt){
+        const idx=queue[qh++];
+        const i=idx*4;
+        d[i+3]=0;
+        const x=idx%w,y=(idx/w)|0;
+        if(x>0)push(idx-1);
+        if(x<w-1)push(idx+1);
+        if(y>0)push(idx-w);
+        if(y<h-1)push(idx+w);
+      }
+
+      ctx.putImageData(image,0,0);
+      const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+      if(!blob)throw new Error('No se pudo convertir la imagen a PNG transparente.');
+      if(blob.size>8*1024*1024)throw new Error('La imagen procesada supera 8 MB. Probá con una imagen más chica.');
+      return blob;
+    }finally{
+      URL.revokeObjectURL(objectUrl);
+    }
   }
 
   async function uploadPng(){
     if(!pendingPng)return currentImageUrl;
-    await validatePng(pendingPng);
     const uid=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2));
     const path='hero-offer/'+Date.now()+'-'+uid+'.png';
     const {error}=await db.storage.from('product-images').upload(path,pendingPng,{
@@ -180,13 +358,17 @@
     $('hoErr').textContent='';
     if(!file){pendingPng=null;preview(currentImageUrl);return;}
     try{
-      await validatePng(file);
-      pendingPng=file;
-      preview(URL.createObjectURL(file));
+      $('hoOk').textContent='Procesando imagen y quitando fondo…';
+      pendingPng=await processImage(file);
+      if(previewObjectUrl)URL.revokeObjectURL(previewObjectUrl);
+      previewObjectUrl=URL.createObjectURL(pendingPng);
+      preview(previewObjectUrl);
+      $('hoOk').textContent='✓ Fondo procesado. Revisá la cuadrícula y guardá la oferta.';
     }catch(err){
       $('hoImageFile').value='';
       pendingPng=null;
       preview(currentImageUrl);
+      $('hoOk').textContent='';
       $('hoErr').textContent=err?.message||String(err);
     }
   });
@@ -231,6 +413,12 @@
       $('hoErr').textContent=err?.message||String(err);
     }
   };
+
+  ['hoTop','hoImgDesktop','hoHeadline','hoSaleText','hoCta','hoProduct','hoHeadlineColor','hoPriceColor'].forEach(id=>{
+    $(id)?.addEventListener('input',updateGridPreview);
+    $(id)?.addEventListener('change',updateGridPreview);
+  });
+  window.addEventListener('resize',updateGridPreview);
 
   btn.addEventListener('click',async()=>{
     document.querySelectorAll('.sidebtn').forEach(b=>b.classList.remove('active'));
