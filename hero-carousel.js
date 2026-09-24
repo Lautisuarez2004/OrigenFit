@@ -389,35 +389,173 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     @media(max-width:650px){
-      .of-hero-viewport{height:610px;min-height:610px}
-      .of-hero-copy-wrap{width:calc(100% - 28px);padding:30px 0 48px}
-      .of-hero-copy{width:92%}
-      .of-hero-title{font-size:clamp(2.05rem,11vw,3.8rem);line-height:.92}
-      .of-hero-sub{font-size:.95rem}
-      .of-hero-badge{font-size:.68rem;padding:6px 10px}
-      .of-hero-cta{min-height:44px;margin-top:16px;padding:0 17px;font-size:.78rem}
-      .of-offer-shell{
-        width:calc(100% - 30px);
-        grid-template-columns:1fr;
-        grid-template-rows:auto 1fr;
-        gap:2px;
-        align-items:start;
-        padding:26px 0 34px;
+      /* Formato móvil tipo banner: franja promocional + puntos debajo. */
+      .hero.of-hero-carousel{
+        background:#fff!important;
+        overflow:hidden!important;
       }
-      .of-offer-copy{padding:0 8px;text-align:left}
-      .of-offer-badge{min-height:31px;padding:0 14px;font-size:.72rem}
-      .of-offer-title{font-size:clamp(2.1rem,12vw,3.2rem);margin-top:12px}
-      .of-offer-sub{font-size:.92rem;margin-top:8px}
-      .of-offer-price{min-height:58px;margin-top:12px;padding:0 18px;border-radius:14px;font-size:2.5rem}
-      .of-offer-points{font-size:.68rem;gap:8px 14px;margin-top:12px}
-      .of-offer-actions{margin-top:11px}
-      .of-offer-product{min-height:250px;height:250px;margin-top:-8px}
-      .of-offer-product img{width:min(74%,300px)!important;height:100%!important}
-      .of-offer-decor:before{right:-155px;top:-140px}
-      .of-hero-sticker{top:18px;right:-64px;min-width:235px;padding:9px 65px;font-size:.68rem}
-      .of-hero-arrow{width:34px;height:44px;border-radius:10px;background:rgba(17,17,17,.56);color:#fff;box-shadow:none}
-      .of-hero-arrow.prev{left:5px}.of-hero-arrow.next{right:5px}
-      .of-hero-dots{bottom:9px;padding:6px 8px}
+      .of-hero-viewport{
+        height:calc((100vw / 2.35) + 42px);
+        min-height:205px;
+        max-height:225px;
+        background:#fff;
+        overflow:hidden;
+      }
+      .of-hero-slide{
+        bottom:42px;
+        background:#fff;
+      }
+
+      /* Slides de imagen: se comportan como banner panorámico. */
+      .of-hero-image-slide>img{
+        object-fit:cover;
+        object-position:center;
+      }
+      .of-hero-copy-wrap{
+        width:calc(100% - 58px);
+        padding:12px 0;
+      }
+      .of-hero-copy{width:76%}
+      .of-hero-title{
+        margin:6px 0 3px;
+        font-size:clamp(1.35rem,7vw,1.9rem);
+        line-height:.92;
+      }
+      .of-hero-sub{
+        font-size:.66rem;
+        line-height:1.2;
+      }
+      .of-hero-badge{
+        font-size:.52rem;
+        padding:4px 7px;
+      }
+      .of-hero-cta{
+        min-height:28px;
+        margin-top:7px;
+        padding:0 10px;
+        font-size:.55rem;
+      }
+
+      /* Oferta de producto: misma composición, comprimida a banner. */
+      .of-offer-shell{
+        width:calc(100% - 54px);
+        grid-template-columns:minmax(0,1.05fr) minmax(118px,.95fr);
+        grid-template-rows:1fr;
+        gap:8px;
+        align-items:center;
+        padding:9px 0 8px;
+      }
+      .of-offer-copy{
+        align-self:center;
+        padding:0;
+        text-align:left;
+        min-width:0;
+      }
+      .of-offer-badge{
+        min-height:20px;
+        padding:0 8px;
+        border-radius:6px;
+        font-size:.48rem;
+        letter-spacing:.08em;
+      }
+      .of-offer-title{
+        margin:5px 0 0;
+        font-size:clamp(1.18rem,6.5vw,1.55rem);
+        line-height:.86;
+        letter-spacing:-.055em;
+      }
+      .of-offer-sub{
+        margin-top:4px;
+        font-size:.58rem;
+        line-height:1.12;
+      }
+      .of-offer-price{
+        min-height:34px;
+        margin-top:6px;
+        padding:0 10px;
+        border-radius:8px;
+        font-size:1.5rem;
+        box-shadow:0 6px 14px rgba(181,0,8,.14);
+      }
+      .of-offer-points{display:none!important}
+      .of-offer-actions{
+        margin-top:5px;
+        gap:6px;
+      }
+      .of-offer-link{
+        min-height:25px;
+        padding:0 9px;
+        font-size:.48rem;
+      }
+      .of-offer-shipping{display:none!important}
+      .of-offer-product{
+        min-height:0;
+        height:100%;
+        margin:0;
+      }
+      .of-offer-product:before{width:92%}
+      .of-offer-product img{
+        width:96%!important;
+        height:96%!important;
+        max-width:180px!important;
+        max-height:150px!important;
+        object-fit:contain!important;
+        filter:drop-shadow(0 8px 9px rgba(0,0,0,.16));
+      }
+      .of-offer-decor:before{
+        right:-105px;
+        top:-160px;
+        width:300px;
+        height:300px;
+        border-width:34px;
+      }
+      .of-offer-decor:after{
+        left:-95px;
+        top:-105px;
+        transform:scale(.62);
+        transform-origin:top left;
+      }
+
+      .of-hero-sticker{
+        top:8px;
+        right:-78px;
+        min-width:205px;
+        padding:5px 58px;
+        font-size:.48rem;
+      }
+
+      /* Flechas dentro del banner; dots sobre blanco, como la referencia. */
+      .of-hero-arrow{
+        top:calc((100% - 42px)/2);
+        width:28px;
+        height:38px;
+        margin-top:-19px;
+        border-radius:8px;
+        background:rgba(255,255,255,.82);
+        color:#111;
+        box-shadow:0 4px 12px rgba(0,0,0,.10);
+        font-size:1.35rem;
+      }
+      .of-hero-arrow.prev{left:4px}
+      .of-hero-arrow.next{right:4px}
+      .of-hero-dots{
+        bottom:11px;
+        padding:0;
+        gap:8px;
+        background:transparent;
+        backdrop-filter:none;
+      }
+      .of-hero-dot{
+        width:7px;
+        height:7px;
+        background:#d6d6d8;
+        box-shadow:none;
+      }
+      .of-hero-dot.active{
+        width:7px;
+        border-radius:50%;
+        background:#343438;
+      }
     }
     @media(prefers-reduced-motion:reduce){.of-hero-slide{transition:none}}
   `;
