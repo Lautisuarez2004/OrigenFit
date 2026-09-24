@@ -47,7 +47,7 @@ button,input,textarea{font:inherit}.hidden{display:none!important}.muted{color:v
     <button class="sidebtn active" data-panel="products">Productos</button>
     <button class="sidebtn" data-panel="combos">Combos</button>
     <button class="sidebtn" data-panel="categories">Categorías</button>
-    <button class="sidebtn" data-panel="promotions">Promociones</button>
+    <button class="sidebtn" data-panel="promotions">Portada</button>
     <button class="sidebtn" data-panel="security">Seguridad</button>
     <a class="sidebtn" href="index.html" target="_blank">Ver tienda ↗</a>
     <button id="logout" class="sidebtn">Cerrar sesión</button>
@@ -184,13 +184,13 @@ button,input,textarea{font:inherit}.hidden{display:none!important}.muted{color:v
 <section id="promotionsPanel" class="hidden">
       <div class="ag">
         <div class="panel">
-          <h3>Promociones / carrusel</h3>
-          <p class="muted">Estos banners se muestran en el carrusel de la portada.</p>
+          <h3>Portada / carrusel principal</h3>
+          <p class="muted">Estas imágenes ocupan toda la portada. Podés usarlas para ofertas, envíos gratis, campañas o simplemente una foto.</p>
           <div id="promoList"></div>
         </div>
 
         <div class="panel" id="promoFormPanel">
-          <h3 id="promoTitle">Nueva promoción</h3>
+          <h3 id="promoTitle">Nuevo slide</h3>
           <input id="promoId" type="hidden">
           <div class="two"><div class="field"><label>Título</label><input id="prTitle"></div><div class="field"><label>Badge</label><input id="prBadge" placeholder="Promo / 48 hs / Envíos gratis"></div></div>
           <div class="two"><div class="field"><label>Sticker esquina</label><input id="prSticker" placeholder="%10 OFF"></div><div class="field"><label>Subtítulo</label><input id="prSubtitle"></div></div>
@@ -204,7 +204,7 @@ button,input,textarea{font:inherit}.hidden{display:none!important}.muted{color:v
           </div>
           <div class="checks"><label><input id="prActive" type="checkbox" checked> Activa</label></div>
           <div class="toolbar">
-            <button id="prSave" class="btn red">Guardar promoción</button>
+            <button id="prSave" class="btn red">Guardar slide</button>
             <button id="prDelete" class="btn danger hidden">Eliminar</button>
             <button id="prClear" class="btn light">Limpiar</button>
           </div>
@@ -792,7 +792,7 @@ function switchPanel(name){
     name==='products' ? 'Catálogo' :
     name==='combos' ? 'Combos' :
     name==='categories' ? 'Categorías' :
-    name==='promotions' ? 'Promociones' :
+    name==='promotions' ? 'Portada' :
     'Seguridad';
 
   $('newAction').classList.toggle('hidden', name==='security');
@@ -801,7 +801,7 @@ function switchPanel(name){
     name==='products' ? '+ Nuevo producto' :
     name==='combos' ? '+ Nuevo combo' :
     name==='categories' ? '+ Nueva categoría' :
-    '+ Nueva promoción';
+    '+ Nuevo slide';
 }
 document.querySelectorAll('.sidebtn[data-panel]').forEach(b=>b.onclick=()=>switchPanel(b.dataset.panel));
 $('newAction').onclick=()=>{
@@ -814,6 +814,5 @@ $('newAction').onclick=()=>{
 
 enter();
 </script>
-<script src="admin-hero-offer.js?v=20260922-3"></script>
 </body>
 </html>
