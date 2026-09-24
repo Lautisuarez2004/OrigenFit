@@ -228,6 +228,97 @@ button{cursor:pointer}
 .drawer-thumb img{width:100%;height:100%;object-fit:contain}
 .drawer-letter{font-size:1.3rem;color:var(--red);font-weight:950}
 
+.drawer-menu{display:block}
+.drawer-menu-item{
+  width:100%;
+  min-height:76px;
+  border:0;
+  border-bottom:1px solid var(--line);
+  background:#fff;
+  color:#25262a;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  text-align:left;
+  font-weight:950;
+  font-size:1rem;
+  letter-spacing:-.02em;
+}
+.drawer-products-toggle{cursor:pointer}
+.drawer-chevron{
+  font-size:2rem;
+  line-height:1;
+  font-weight:500;
+  transition:transform .2s ease;
+}
+.drawer-products-toggle[aria-expanded="true"] .drawer-chevron{transform:rotate(90deg)}
+.drawer-products-panel{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .28s ease;
+  background:#fafafa;
+}
+.drawer-products-panel.open{
+  max-height:58vh;
+  overflow:auto;
+}
+.drawer-products-panel .drawer-list{padding:0}
+.drawer-products-panel .drawer-category{
+  padding:12px 20px 12px 28px;
+  background:#fafafa;
+}
+.drawer-products-panel .drawer-category:last-child{border-bottom:1px solid var(--line)}
+
+@media(max-width:650px){
+  .drawer-backdrop{background:rgba(0,0,0,.18)}
+  .category-drawer{
+    inset:0;
+    width:100vw;
+    height:100dvh;
+    max-width:none;
+    box-shadow:none;
+    transform:translateX(-100%);
+  }
+  .category-drawer.open{transform:translateX(0)}
+  .drawer-head{
+    min-height:76px;
+    padding:0 20px;
+    background:#fff;
+    color:#111;
+    border-bottom:1px solid var(--line);
+  }
+  .drawer-head strong{display:none}
+  .drawer-close{
+    margin-left:auto;
+    width:42px;
+    height:42px;
+    background:#f3f3f4;
+    color:#111;
+    font-size:1.8rem;
+  }
+  .drawer-menu{
+    flex:1;
+    overflow:auto;
+    background:#fff;
+  }
+  .drawer-menu-item{
+    min-height:104px;
+    padding:0 28px;
+    font-size:1.08rem;
+  }
+  .drawer-products-panel.open{max-height:48dvh}
+  .drawer-products-panel .drawer-category{
+    min-height:72px;
+    padding:10px 28px 10px 36px;
+  }
+  .drawer-products-panel .drawer-thumb{
+    width:48px;
+    height:48px;
+    border-radius:10px;
+  }
+}
+
 /* HERO */
 .hero{
   position:relative;
@@ -864,6 +955,7 @@ footer{
 <script src="config.js"></script>
 </head>
 <body>
+<div id="inicio"></div>
 <div class="shipping-bar"><div class="shipping-inner"><div id="shippingViewport" class="shipping-viewport"></div></div></div>
 
 <header class="shop-header">
@@ -888,12 +980,27 @@ footer{
 </header>
 
 <div id="drawerBackdrop" class="drawer-backdrop"></div>
-<aside id="categoryDrawer" class="category-drawer">
+<aside id="categoryDrawer" class="category-drawer" aria-hidden="true">
   <div class="drawer-head">
-    <strong>Categorías</strong>
+    <strong>Menú</strong>
     <button id="drawerClose" class="drawer-close" aria-label="Cerrar">×</button>
   </div>
-  <div id="drawerCategories" class="drawer-list"></div>
+
+  <nav class="drawer-menu" aria-label="Navegación principal">
+    <a class="drawer-menu-item" href="#inicio" data-drawer-link>INICIO</a>
+
+    <button id="drawerProductsToggle" class="drawer-menu-item drawer-products-toggle" type="button" aria-expanded="false">
+      <span>PRODUCTOS</span>
+      <span class="drawer-chevron" aria-hidden="true">›</span>
+    </button>
+
+    <div id="drawerProductsPanel" class="drawer-products-panel" aria-hidden="true">
+      <div id="drawerCategories" class="drawer-list"></div>
+    </div>
+
+    <a class="drawer-menu-item" href="#contacto" data-drawer-link>CONTACTO</a>
+    <a class="drawer-menu-item" href="#combos" data-drawer-link>COMBOS</a>
+  </nav>
 </aside>
 
 <header class="hero">
@@ -970,7 +1077,7 @@ footer{
   </div>
 </section>
 
-<section class="cta-wrap">
+<section class="cta-wrap" id="contacto">
   <div class="c">
     <div class="cta">
       <div>
@@ -1471,20 +1578,41 @@ async function loadCategories(){
   grid.classList.remove('hidden');
 }
 
+function setDrawerProducts(open){
+  const toggle=document.getElementById('drawerProductsToggle');
+  const panel=document.getElementById('drawerProductsPanel');
+  if(!toggle||!panel) return;
+  toggle.setAttribute('aria-expanded',open?'true':'false');
+  panel.setAttribute('aria-hidden',open?'false':'true');
+  panel.classList.toggle('open',open);
+}
+
 function openDrawer(){
-  document.getElementById('categoryDrawer').classList.add('open');
+  const drawer=document.getElementById('categoryDrawer');
+  drawer.classList.add('open');
+  drawer.setAttribute('aria-hidden','false');
   document.getElementById('drawerBackdrop').classList.add('open');
   document.body.style.overflow='hidden';
 }
 function closeDrawer(){
-  document.getElementById('categoryDrawer').classList.remove('open');
+  const drawer=document.getElementById('categoryDrawer');
+  drawer.classList.remove('open');
+  drawer.setAttribute('aria-hidden','true');
   document.getElementById('drawerBackdrop').classList.remove('open');
   document.body.style.overflow='';
+  setDrawerProducts(false);
 }
 
 document.getElementById('menuBtn').onclick=openDrawer;
 document.getElementById('drawerClose').onclick=closeDrawer;
 document.getElementById('drawerBackdrop').onclick=closeDrawer;
+document.getElementById('drawerProductsToggle').onclick=()=>{
+  const open=document.getElementById('drawerProductsToggle').getAttribute('aria-expanded')==='true';
+  setDrawerProducts(!open);
+};
+document.querySelectorAll('[data-drawer-link]').forEach(link=>{
+  link.addEventListener('click',closeDrawer);
+});
 
 const searchInput=document.getElementById('productSearch');
 
