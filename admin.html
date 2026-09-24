@@ -198,7 +198,7 @@ button,input,textarea{font:inherit}.hidden{display:none!important}.muted{color:v
           <div class="imagebox">
             <strong>Imagen del banner</strong>
             <div class="field"><input id="prImageFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
-            <div class="muted" style="font-size:.82rem">Para que el carrusel calce sin bordes, usá una imagen panorámica. Recomendado: 1920 × 500 px (o proporción similar).</div>
+            <div class="muted" style="font-size:.82rem">Para cubrir bien la portada, usá una imagen panorámica de buena calidad. Recomendado: 1920 × 900 px. En celular se recorta automáticamente desde el centro.</div>
             <div id="prImagePreview" class="imagepreview"><span class="muted">Sin imagen seleccionada</span></div>
             <div style="margin-top:10px"><button id="prRemoveImage" type="button" class="btn light">Quitar imagen</button></div>
           </div>
@@ -687,7 +687,6 @@ function readPromoForm(){
 }
 $('prSave').onclick=async()=>{
   $('prOk').textContent=''; $('prErr').textContent=''; const payload=readPromoForm();
-  if(!payload.title){ $('prErr').textContent='Ingresá el título de la promoción.'; return; }
   let uploaded=null;
   try{
     if(newPromoImageFile){ $('prOk').textContent='Subiendo banner…'; uploaded=await uploadToBucket(newPromoImageFile, 'promos', 'promo-images'); payload.image_url=uploaded.url; }
