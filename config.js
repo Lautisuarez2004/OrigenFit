@@ -34,7 +34,7 @@ document.write('<script src="section-order.js?v=20260911-2"><\/script>');
 /* Header aprobado: ORIGENFIT negro/rojo sobre fondo blanco. */
 document.write('<script src="brand-header.js?v=20260911-3"><\/script>');
 /* Portada principal: carrusel full-width administrado desde Promociones. */
-document.write('<script src="hero-carousel.js?v=20260923-1"><\/script>');
+document.write('<script src="hero-carousel.js?v=20260923-2"><\/script>');
 
 /* Promociones: navegación manual y corrección de imagen en móvil. */
 document.addEventListener('DOMContentLoaded',()=>{
