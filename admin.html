@@ -192,17 +192,22 @@ button,input,textarea{font:inherit}.hidden{display:none!important}.muted{color:v
         <div class="panel" id="promoFormPanel">
           <h3 id="promoTitle">Nuevo slide</h3>
           <input id="promoId" type="hidden">
-          <div class="two"><div class="field"><label>Título</label><input id="prTitle"></div><div class="field"><label>Badge</label><input id="prBadge" placeholder="Promo / 48 hs / Envíos gratis"></div></div>
+          <div class="two">
+            <div class="field"><label>Tipo de slide</label><select id="prMode"><option value="image">Imagen completa</option><option value="offer">Oferta de producto</option></select></div>
+            <div class="field"><label>Orden</label><input id="prOrd" type="number" value="1"></div>
+          </div>
+          <div class="two"><div class="field"><label>Título</label><input id="prTitle"></div><div class="field"><label>Badge</label><input id="prBadge" placeholder="OFERTA DESTACADA / ENVÍO GRATIS"></div></div>
           <div class="two"><div class="field"><label>Sticker esquina</label><input id="prSticker" placeholder="%10 OFF"></div><div class="field"><label>Subtítulo</label><input id="prSubtitle"></div></div>
-          <div class="two"><div class="field"><label>Link (opcional)</label><input id="prLink" placeholder="https://..."></div><div class="field"><label>Orden</label><input id="prOrd" type="number" value="1"></div></div>
+          <div class="two"><div class="field"><label>Precio destacado</label><input id="prPrice" placeholder="$14.899"></div><div class="field"><label>Texto del botón</label><input id="prButton" placeholder="Ver producto"></div></div>
+          <div class="field"><label>Link (opcional)</label><input id="prLink" placeholder="producto.html?id=... o https://..."></div>
           <div class="imagebox">
             <strong>Imagen del banner</strong>
             <div class="field"><input id="prImageFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
-            <div class="muted" style="font-size:.82rem">Para cubrir bien la portada, usá una imagen panorámica de buena calidad. Recomendado: 1920 × 900 px. En celular se recorta automáticamente desde el centro.</div>
+            <div class="muted" style="font-size:.82rem"><b>Imagen completa:</b> recomendado 1920 × 900 px. <b>Oferta de producto:</b> podés cargar la foto normal del producto; la web arma automáticamente la composición clara de la promo.</div>
             <div id="prImagePreview" class="imagepreview"><span class="muted">Sin imagen seleccionada</span></div>
             <div style="margin-top:10px"><button id="prRemoveImage" type="button" class="btn light">Quitar imagen</button></div>
           </div>
-          <div class="checks"><label><input id="prActive" type="checkbox" checked> Activa</label></div>
+          <div class="checks"><label><input id="prActive" type="checkbox" checked> Activa</label><label><input id="prOverlay" type="checkbox"> Oscurecer imagen para leer texto</label></div>
           <div class="toolbar">
             <button id="prSave" class="btn red">Guardar slide</button>
             <button id="prDelete" class="btn danger hidden">Eliminar</button>
@@ -661,13 +666,15 @@ function renderPromosAdmin(){
 function fillPromo(p){
   $('promoTitle').textContent='Editar promoción';
   $('promoId').value=p.id; $('prTitle').value=p.title||''; $('prBadge').value=p.badge||''; $('prSticker').value=p.sticker_text||''; $('prSubtitle').value=p.subtitle||''; $('prLink').value=p.link_url||''; $('prOrd').value=p.sort_order??0;
-  $('prActive').checked=!!p.active;
+  $('prMode').value=p.display_mode||'image'; $('prPrice').value=p.price_text||''; $('prButton').value=p.button_text||'Ver promoción';
+  $('prActive').checked=!!p.active; $('prOverlay').checked=p.show_overlay!==false;
   currentPromoImageUrl=p.image_url||null; newPromoImageFile=null; removePromoImage=false; $('prImageFile').value=''; setPreview('prImagePreview', currentPromoImageUrl);
   $('prDelete').classList.remove('hidden'); $('prOk').textContent=''; $('prErr').textContent='';
 }
 function clearPromo(){
   promoSelected=null; currentPromoImageUrl=null; newPromoImageFile=null; removePromoImage=false;
-  $('promoTitle').textContent='Nueva promoción'; ['promoId','prTitle','prBadge','prSticker','prSubtitle','prLink'].forEach(id=>$(id).value='');
+  $('promoTitle').textContent='Nuevo slide'; ['promoId','prTitle','prBadge','prSticker','prSubtitle','prLink','prPrice','prButton'].forEach(id=>$(id).value='');
+  $('prMode').value='image'; $('prButton').value='Ver promoción'; $('prOverlay').checked=false;
   $('prOrd').value=promos.reduce((m,p)=>Math.max(m, Number(p.sort_order||0)),0)+1; $('prActive').checked=true; $('prImageFile').value=''; setPreview('prImagePreview', null);
   $('prDelete').classList.add('hidden'); $('prOk').textContent=''; $('prErr').textContent=''; renderPromosAdmin();
 }
@@ -680,6 +687,10 @@ function readPromoForm(){
     badge:$('prBadge').value.trim(),
     sticker_text:$('prSticker').value.trim(),
     subtitle:$('prSubtitle').value.trim(),
+    price_text:$('prPrice').value.trim(),
+    button_text:$('prButton').value.trim()||'Ver promoción',
+    display_mode:$('prMode').value||'image',
+    show_overlay:$('prOverlay').checked,
     link_url:$('prLink').value.trim(),
     sort_order:Number($('prOrd').value||0),
     active:$('prActive').checked
@@ -697,14 +708,14 @@ $('prSave').onclick=async()=>{
       : await db.from('promotions').insert(payload).select().single();
     if(r.error) throw r.error;
     promoSelected=r.data.id; currentPromoImageUrl=r.data.image_url||null; newPromoImageFile=null; removePromoImage=false; $('prImageFile').value='';
-    $('prOk').textContent='✓ Promoción guardada correctamente.'; await loadPromos(); fillPromo(r.data);
+    $('prOk').textContent='✓ Slide guardado correctamente.'; await loadPromos(); fillPromo(r.data);
   }catch(err){
     if(uploaded?.path) await db.storage.from('promo-images').remove([uploaded.path]);
     $('prOk').textContent=''; $('prErr').textContent=err.message||String(err);
   }
 };
 $('prDelete').onclick=async()=>{
-  if(!promoSelected || !confirm('¿Eliminar esta promoción?')) return;
+  if(!promoSelected || !confirm('¿Eliminar este slide de la portada?')) return;
   const {error}=await db.from('promotions').delete().eq('id', promoSelected);
   if(error){ $('prErr').textContent=error.message; return; }
   clearPromo(); await loadPromos();
