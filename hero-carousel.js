@@ -395,14 +395,14 @@ document.addEventListener('DOMContentLoaded',()=>{
         overflow:hidden!important;
       }
       .of-hero-viewport{
-        height:calc((100vw / 2.35) + 42px);
-        min-height:205px;
-        max-height:225px;
+        height:clamp(180px,calc(100vw / 2.35),205px);
+        min-height:180px;
+        max-height:205px;
         background:#fff;
         overflow:hidden;
       }
       .of-hero-slide{
-        bottom:42px;
+        bottom:0;
         background:#fff;
       }
 
@@ -526,7 +526,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
       /* Flechas dentro del banner; dots sobre blanco, como la referencia. */
       .of-hero-arrow{
-        top:calc((100% - 42px)/2);
+        top:50%;
         width:28px;
         height:38px;
         margin-top:-19px;
@@ -539,16 +539,16 @@ document.addEventListener('DOMContentLoaded',()=>{
       .of-hero-arrow.prev{left:4px}
       .of-hero-arrow.next{right:4px}
       .of-hero-dots{
-        bottom:11px;
-        padding:0;
-        gap:8px;
-        background:transparent;
-        backdrop-filter:none;
+        bottom:7px;
+        padding:5px 7px;
+        gap:7px;
+        background:rgba(255,255,255,.78);
+        backdrop-filter:blur(4px);
       }
       .of-hero-dot{
         width:7px;
         height:7px;
-        background:#d6d6d8;
+        background:rgba(70,70,74,.34);
         box-shadow:none;
       }
       .of-hero-dot.active{
