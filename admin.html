@@ -277,32 +277,82 @@ function resetIdle(){
 }
 ['pointerdown','keydown','touchstart'].forEach(evt=>document.addEventListener(evt, resetIdle, {passive:true}));
 
-async function verifyAdmin(){
-  const {data:{user}, error} = await db.auth.getUser();
-  if(error || !user) return false;
-  const {data:a, error:ae} = await db.from('admin_users').select('user_id').eq('user_id', user.id).maybeSingle();
+let adminEntered=false;
+let loginBusy=false;
+
+async function verifyAdmin(user){
+  if(!user){
+    const {data:{session}, error}=await db.auth.getSession();
+    if(error || !session?.user) return false;
+    user=session.user;
+  }
+  const {data:a, error:ae}=await db.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();
   if(ae || !a) return false;
-  $('who').textContent = user.email || '';
+  $('who').textContent=user.email||'';
   return true;
 }
-async function enter(){
-  if(!(await verifyAdmin())) return;
-  $('login').classList.add('hidden'); $('app').classList.remove('hidden'); resetIdle();
-  await Promise.all([loadProducts(), loadCombosAdmin(), loadPromos(), loadCategoriesAdmin(), loadTopMessagesAdmin()]);
+
+async function enter(user){
+  if(adminEntered) return true;
+  if(!(await verifyAdmin(user))) return false;
+  adminEntered=true;
+  $('login').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  resetIdle();
+  await Promise.all([loadProducts(),loadCombosAdmin(),loadPromos(),loadCategoriesAdmin(),loadTopMessagesAdmin()]);
+  return true;
 }
-$('loginForm').addEventListener('submit', async e=>{
-  e.preventDefault(); $('loginErr').textContent='';
-  const {error} = await db.auth.signInWithPassword({email:$('email').value.trim(), password:$('pass').value});
-  if(error){ $('loginErr').textContent = error.message; return; }
-  if(!(await verifyAdmin())){
-    await db.auth.signOut({scope:'local'});
-    $('loginErr').textContent='Usuario no autorizado como administrador.';
-    return;
+
+/* Una sola comprobación inicial. El login espera a que termine para evitar
+   que una verificación sin sesión cierre una sesión recién iniciada. */
+const adminBootstrap=(async()=>{
+  const {data:{session}}=await db.auth.getSession();
+  if(session?.user) await enter(session.user);
+})();
+
+$('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(loginBusy) return;
+  loginBusy=true;
+  $('loginErr').textContent='';
+
+  const submit=$('loginForm').querySelector('button[type="submit"]');
+  if(submit) submit.disabled=true;
+
+  try{
+    await adminBootstrap;
+
+    /* Si bootstrap ya encontró una sesión válida no volvemos a autenticar. */
+    if(adminEntered) return;
+
+    const {data,error}=await db.auth.signInWithPassword({
+      email:$('email').value.trim(),
+      password:$('pass').value
+    });
+    if(error){
+      $('loginErr').textContent=error.message;
+      return;
+    }
+
+    const ok=await enter(data?.user||null);
+    if(!ok){
+      await db.auth.signOut({scope:'local'});
+      $('loginErr').textContent='Usuario no autorizado como administrador.';
+      return;
+    }
+
+    $('pass').value='';
+  }finally{
+    loginBusy=false;
+    if(submit) submit.disabled=false;
   }
-  $('pass').value=''; $('login').classList.add('hidden'); $('app').classList.remove('hidden'); resetIdle();
-  await Promise.all([loadProducts(), loadCombosAdmin(), loadPromos(), loadCategoriesAdmin(), loadTopMessagesAdmin()]);
 });
-$('logout').onclick=async()=>{await db.auth.signOut({scope:'local'});location.reload()};
+
+$('logout').onclick=async()=>{
+  adminEntered=false;
+  await db.auth.signOut({scope:'local'});
+  location.reload();
+};
 
 async function prepareImage(file){
   const bitmap=await createImageBitmap(file);
@@ -822,7 +872,6 @@ $('newAction').onclick=()=>{
   else if(panel==='promotions'){ clearPromo(); $('promoFormPanel').scrollIntoView({behavior:'smooth',block:'start'}); }
 };
 
-enter();
 </script>
 </body>
 </html>
