@@ -425,8 +425,23 @@ function readProductForm(){
     description:$('pDesc').value.trim(), featured:$('pFeatured').checked, visible:$('pVisible').checked
   };
 }
+
+async function requireAdminSession(){
+  const {data:{session},error}=await db.auth.getSession();
+  if(error||!session?.user){
+    adminEntered=false;
+    $('app').classList.add('hidden');
+    $('login').classList.remove('hidden');
+    $('loginErr').textContent='La sesión venció. Iniciá sesión nuevamente.';
+    return null;
+  }
+  return session.user;
+}
+
 $('pSave').onclick=async()=>{
-  $('pOk').textContent=''; $('pErr').textContent=''; const payload=readProductForm();
+  $('pOk').textContent=''; $('pErr').textContent='';
+  if(!(await requireAdminSession())) return;
+  const payload=readProductForm();
   if(!payload.name){ $('pErr').textContent='Ingresá el nombre del producto.'; return; }
   let uploaded=null;
   try{
